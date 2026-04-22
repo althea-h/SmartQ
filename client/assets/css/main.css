@@ -11,6 +11,7 @@
     --primary-dark: #0e3895;
     --primary-light: #60a5fa;
 
+
     /* Secondary / Neutral colors */
     --secondary-color: #64748b;
     /* Slate */
@@ -29,7 +30,10 @@
     --info: #0ea5e9;
 
     /* --- TYPOGRAPHY --- */
+    --font-header: 'Azonix', sans-serif;
     --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-sub: 'Poppins', sans-serif;
+
 
     /* Font sizes (Minor Third Scale) */
     --font-xs: 0.75rem;

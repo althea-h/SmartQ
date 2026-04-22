@@ -1,4 +1,25 @@
-h1 {
-  font-family: var(--font-main);
-  color: var(--primary-color);
+/* ============================================================
+   Dashboard Page Styles
+   ============================================================ */
+
+/* ── Stats Grid ──────────────────────────────────────────── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-lg);
+  margin-bottom: var(--space-xl);
+}
+
+/* ── Dashboard Panels ────────────────────────────────────── */
+.dashboard-panels {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-lg);
+}
+
+/* For future: two-column panel layout */
+@media (min-width: 1024px) {
+  .dashboard-panels.two-col {
+    grid-template-columns: 2fr 1fr;
+  }
 }
