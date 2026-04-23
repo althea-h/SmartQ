@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <title>SmartQ — Sign Up</title>
   <meta charset="UTF-8">
@@ -24,12 +25,13 @@
     <div class="auth-card-body">
 
       <form action="signup_validate.php" method="POST">
-        <input type="text"     class="form-control" name="firstname"        placeholder="First Name"       required>
-        <input type="text"     class="form-control" name="lastname"         placeholder="Last Name"        required>
-        <input type="text"     class="form-control" name="username"         placeholder="Username"         required>
-        <input type="email"    class="form-control" name="email"            placeholder="Email"            required>
-        <input type="password" class="form-control" name="password"         placeholder="Password"         required minlength="6">
-        <input type="password" class="form-control" name="confirm_password" placeholder="Confirm Password" required minlength="6">
+        <input type="text" class="form-control" name="firstname" placeholder="First Name" required>
+        <input type="text" class="form-control" name="lastname" placeholder="Last Name" required>
+        <input type="text" class="form-control" name="username" placeholder="Username" required>
+        <input type="email" class="form-control" name="email" placeholder="Email" required>
+        <input type="password" class="form-control" name="password" placeholder="Password" required minlength="6">
+        <input type="password" class="form-control" name="confirm_password" placeholder="Confirm Password" required
+          minlength="6">
         <button type="submit" class="auth-btn">Sign Up</button>
       </form>
 
@@ -40,4 +42,5 @@
   </div>
 
 </body>
+
 </html>

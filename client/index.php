@@ -27,8 +27,8 @@
 		</div>
 
 		<div class="nav-actions">
-			<a href="#">Login</a>
-			<a href="#">Sign Up</a>
+			<a href="pages/login.php">Login</a>
+			<a href="pages/signup.php">Sign Up</a>
 		</div>
 	</nav>
 
@@ -39,7 +39,7 @@
 				<h1>SmartQ - Efficient Queuing System</h1>
 				<p>SmartQ is a modern queuing system for student ID validation in BukSU.</p>
 				<div class="hero-btns">
-					<a href="#" class="btn-hero-primary">Get Started</a>
+					<a href="pages/signup.php" class="btn-hero-primary">Get Started</a>
 					<a href="#" class="btn-hero-secondary">Learn More</a>
 				</div>
 			</div>
