@@ -31,7 +31,8 @@
     <div class="admin-main">
 
       <!-- Topbar -->
-      <div data-component="topbar" data-props='{"title":"Queue"}'></div>
+      <div data-component="topbar" data-props='{"title":"Queue","description":"View and manage active queues." }'>
+      </div>
 
       <!-- Page Content -->
       <main class="admin-content">

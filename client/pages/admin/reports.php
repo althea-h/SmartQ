@@ -31,7 +31,9 @@
     <div class="admin-main">
 
       <!-- Topbar -->
-      <div data-component="topbar" data-props='{"title":"Reports"}'></div>
+      <div data-component="topbar"
+        data-props='{"title":"Reports", "description":"View and analyze performance reports"}'>
+      </div>
 
       <!-- Page Content -->
       <main class="admin-content">

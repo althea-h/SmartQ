@@ -31,23 +31,24 @@
     <div class="admin-main">
 
       <!-- Topbar -->
-      <div data-component="topbar" data-props='{"title":"Dashboard"}'></div>
+      <div data-component="topbar" data-props='{"title":"Dashboard","description":"Welcome back, Admin!"}'></div>
+
 
       <!-- Page Content -->
       <main class="admin-content">
 
         <!-- Stats Row -->
         <section class="stats-grid">
-          <div data-component="stat-card"
-            data-props='{"icon":"📋","label":"Total Queues","value":"128","trend":"+12%"}'></div>
-
-          <div data-component="stat-card"
-            data-props='{"icon":"🎓","label":"Students Today","value":"54","trend":"+5%"}'></div>
-
-          <div data-component="stat-card" data-props='{"icon":"✅","label":"Completed","value":"98","trend":"+8%"}'>
+          <div data-component="stat-card" data-props='{"icon":"","label":"Total Queues","value":"128","trend":"+12%"}'>
           </div>
 
-          <div data-component="stat-card" data-props='{"icon":"⏳","label":"Avg. Wait","value":"4m","trend":"-15%"}'>
+          <div data-component="stat-card" data-props='{"icon":"","label":"Students Today","value":"54","trend":"+5%"}'>
+          </div>
+
+          <div data-component="stat-card" data-props='{"icon":"","label":"Completed","value":"98","trend":"+8%"}'>
+          </div>
+
+          <div data-component="stat-card" data-props='{"icon":"","label":"Avg. Wait","value":"4m","trend":"-15%"}'>
           </div>
         </section>
 

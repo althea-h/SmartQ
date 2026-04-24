@@ -31,7 +31,9 @@
     <div class="admin-main">
 
       <!-- Topbar -->
-      <div data-component="topbar" data-props='{"title":"Settings"}'></div>
+      <div data-component="topbar"
+        data-props='{"title":"Settings", "description":"Manage system settings and configurations"}'>
+      </div>
 
       <!-- Page Content -->
       <main class="admin-content">

@@ -9,6 +9,7 @@
  */
 
 $title = isset($_GET['title']) ? htmlspecialchars($_GET['title']) : 'Dashboard';
+$description = isset($_GET['description']) ? htmlspecialchars($_GET['description']) : '';
 ?>
 
 <header class="topbar" id="topbar">
@@ -21,7 +22,14 @@ $title = isset($_GET['title']) ? htmlspecialchars($_GET['title']) : 'Dashboard';
   </button>
 
   <!-- Page title -->
-  <h1 class="topbar-title"><?= $title ?></h1>
+  <div class="topbar-title-area">
+    <h1 class="topbar-title">
+      <?= $title ?>
+    </h1>
+    <p class="topbar-subtitle">
+      <?= $description ?>
+    </p>
+  </div>
 
   <!-- Right-side actions -->
   <div class="topbar-actions">
@@ -32,12 +40,12 @@ $title = isset($_GET['title']) ? htmlspecialchars($_GET['title']) : 'Dashboard';
 
     <!-- Notifications -->
     <button class="topbar-btn" id="notifications-btn" aria-label="Notifications">
-      🔔 <span class="badge" id="notif-count">3</span>
+      <span class="badge" id="notif-count">3</span>
     </button>
 
     <!-- User avatar -->
     <div class="topbar-user" id="user-menu">
-      <span class="topbar-avatar">👤</span>
+      <span class="topbar-avatar"></span>
       <span class="topbar-username">Admin</span>
     </div>
   </div>

@@ -25,13 +25,14 @@
   <div class="admin-layout">
 
     <!-- ── Sidebar (loaded dynamically) ── -->
-    <div data-component="sidebar" data-props='{"active":"students"}'></div>
+    <div data-component="sidebar" data-props='{"active":"students"}'>
+    </div>
 
     <!-- ── Main Area ── -->
     <div class="admin-main">
 
       <!-- Topbar -->
-      <div data-component="topbar" data-props='{"title":"Students"}'></div>
+      <div data-component="topbar" data-props='{"title":"Students", "description":"Manage student validation"}'></div>
 
       <!-- Page Content -->
       <main class="admin-content">
