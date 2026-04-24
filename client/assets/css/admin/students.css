@@ -1,0 +1,214 @@
+/* ============================================================
+   SmartQ Admin Students Management
+   ============================================================ */
+
+.students-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+/* ── Filter Bar ────────────────────────────────────────────── */
+.students-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-md);
+  background: var(--card-bg);
+  padding: var(--space-md) var(--space-lg);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: var(--shadow-sm);
+}
+
+.search-wrapper {
+  position: relative;
+  flex: 1;
+  max-width: 400px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px 16px 10px 40px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--bg-muted);
+  outline: none;
+  font-family: inherit;
+  font-size: var(--font-sm);
+  transition: all 0.2s;
+}
+
+.search-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(28, 90, 223, 0.1);
+}
+
+.search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+}
+
+.filter-group {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.filter-select {
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--bg-muted);
+  background: white;
+  font-size: var(--font-sm);
+  font-weight: 500;
+  outline: none;
+  cursor: pointer;
+}
+
+
+/* ── Table Styling ─────────────────────────────────────────── */
+.students-table-container {
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.students-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.students-table th {
+  background: var(--bg-muted);
+  padding: var(--space-md) var(--space-lg);
+  font-size: var(--font-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  color: var(--text-muted);
+  border-bottom: 2px solid rgba(0, 0, 0, 0.02);
+}
+
+.students-table td {
+  padding: var(--space-md) var(--space-lg);
+  font-size: var(--font-sm);
+  color: var(--text-main);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  vertical-align: middle;
+}
+
+.students-table tr:last-child td {
+  border-bottom: none;
+}
+
+.students-table tr:hover td {
+  background: rgba(28, 90, 223, 0.02);
+}
+
+.student-id-cell {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.student-name-cell {
+  font-weight: 600;
+}
+
+/* ── Status Badges ─────────────────────────────────────────── */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.status-badge::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.badge-validated {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--success);
+}
+
+.badge-validated::before {
+  background: var(--success);
+}
+
+.badge-not-validated {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--error);
+}
+
+.badge-not-validated::before {
+  background: var(--error);
+}
+
+.badge-pending {
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--warning);
+}
+
+.badge-pending::before {
+  background: var(--warning);
+}
+
+.college-badge-small {
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-muted);
+  color: var(--text-main);
+  font-size: 11px;
+  font-weight: 700;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+
+/* ── Actions ───────────────────────────────────────────────── */
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-action {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--bg-muted);
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--text-muted);
+}
+
+.btn-action:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+  background: rgba(28, 90, 223, 0.05);
+}
+
+.btn-validate {
+  color: var(--success);
+}
+
+.btn-validate:hover {
+  border-color: var(--success);
+  color: white;
+  background: var(--success);
+}
