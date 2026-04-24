@@ -11,8 +11,8 @@
 
   <!-- Stylesheets -->
   <link rel="stylesheet" href="../../assets/css/main.css">
-  <link rel="stylesheet" href="../../assets/css/components.css">
-  <link rel="stylesheet" href="../../assets/css/admin/dashboard.css">
+  <link rel="stylesheet" href="../../assets/css/components/components.css">
+  <link rel="stylesheet" href="../../assets/css/admin/students.css">
 
   <title>SQ | Queue</title>
 </head>
