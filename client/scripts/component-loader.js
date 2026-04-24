@@ -48,6 +48,8 @@
     /* ── Widgets / Cards ────────── */
     "stat-card": "widgets/stat-card.php",
     "recent-activity": "widgets/recent-activity.php",
+    graph: "widgets/graph.php",
+    colleges: "widgets/colleges.php",
 
     // ➕ Add new components here…
   };
@@ -130,7 +132,7 @@
           xhr.statusText
         );
         $el.html(
-          `<div class="sq-error">⚠ Component <strong>${name}</strong> could not be loaded.</div>`
+          `<div class="sq-error"> Component <strong>${name}</strong> could not be loaded.</div>`
         );
         return;
       }
