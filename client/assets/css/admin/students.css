@@ -212,3 +212,21 @@
   color: white;
   background: var(--success);
 }
+
+.btn-approve:hover {
+  border-color: var(--success);
+  color: var(--success);
+  background: rgba(16, 185, 129, 0.08);
+}
+
+.btn-reject:hover {
+  border-color: var(--error);
+  color: var(--error);
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.btn-email:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+  background: rgba(28, 90, 223, 0.08);
+}

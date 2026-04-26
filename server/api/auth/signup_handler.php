@@ -12,6 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $lastname = $_POST['lastname'];
     $email = $_POST['email'];
     $college_id = $_POST['college'];
+    $yearlvl = $_POST['yearlvl'];
     $password = $_POST['password'];
     $confirm = $_POST['confirm_password'];
 
@@ -45,14 +46,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
     // Insert into students table
-    $query = "INSERT INTO students (student_id, first_name, last_name, email, student_pass, status_id, college_id) 
-              VALUES (:student_id, :first_name, :last_name, :email, :password, 2, :college_id)";
+    $query = "INSERT INTO students (student_id, first_name, last_name, email, yearlvl, student_pass, status_id, college_id) 
+              VALUES (:student_id, :first_name, :last_name, :email, :yearlvl, :password, 2, :college_id)";
     
     $stmt = $db->prepare($query);
     $stmt->bindParam(':student_id', $studentid);
     $stmt->bindParam(':first_name', $firstname);
     $stmt->bindParam(':last_name', $lastname);
     $stmt->bindParam(':email', $email);
+    $stmt->bindParam(':yearlvl', $yearlvl);
     $stmt->bindParam(':password', $hashed_password);
     $stmt->bindParam(':college_id', $college_id);
 

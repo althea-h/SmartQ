@@ -823,6 +823,55 @@
 }
 
 
+/* MANAGE QUEUE */
+.manage-header {
+  background: var(--card-bg);
+  padding: var(--space-lg) var(--space-xl);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-xl);
+}
+
+.queue-details h2 {
+  font-size: var(--font-lg);
+  margin-bottom: 4px;
+}
+
+.queue-meta {
+  display: flex;
+  gap: var(--space-md);
+  color: var(--text-muted);
+  font-size: var(--font-sm);
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-back {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: var(--font-sm);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-back:hover {
+  color: var(--primary-color);
+}
+
+
+
+
+
 /* ═══════════════════════════════════════════════════════════════
    SHARED WIDGET HEADER
    ═══════════════════════════════════════════════════════════════ */
