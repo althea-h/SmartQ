@@ -43,7 +43,8 @@ temp/
 scratch/
 
 # PHP/Composer specific
-vendor/              # Composer dependencies
+# Composer dependencies
+**/vendor/
 composer.lock         # Optional, commit if you want reproducible builds
 *.cache
 *.phpunit.result.cache
