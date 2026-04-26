@@ -201,9 +201,9 @@
           const rowStatus = $(this).find('.status-cell').text().toLowerCase().trim();
 
           const matchesSearch = rowText.indexOf(searchText) > -1;
-          const matchesYear = yearFilter === "" || rowYear.indexOf(yearFilter) > -1;
+          const matchesYear = yearFilter === "" || rowYear === yearFilter;
           const matchesCollege = collegeFilter === "" || rowCollege.indexOf(collegeFilter.toLowerCase()) > -1;
-          const matchesStatus = statusFilter === "" || rowStatus.indexOf(statusFilter) > -1;
+          const matchesStatus = statusFilter === "" || rowStatus === statusFilter;
 
           const isVisible = matchesSearch && matchesYear && matchesCollege && matchesStatus;
           $(this).toggle(isVisible);
