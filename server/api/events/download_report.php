@@ -23,11 +23,11 @@ try {
     }
 
     // Fetch booked students
-    $query = "SELECT ql.queue_no, ql.booked_at, s.student_id, s.first_name, s.last_name, s.email, s.college_id 
+    $query = "SELECT ql.queue_number, s.student_id, s.first_name, s.last_name, s.email, s.college_id 
               FROM queue_list ql
               JOIN students s ON ql.student_id = s.student_id
               WHERE ql.schedule_id = :id
-              ORDER BY ql.queue_no ASC";
+              ORDER BY ql.queue_number ASC";
     
     $stmt = $db->prepare($query);
     $stmt->bindParam(':id', $schedule_id);
@@ -50,7 +50,7 @@ try {
     fputcsv($output, ['Status', $schedule['status']]);
     fputcsv($output, []); // Blank line
 
-    fputcsv($output, ['Queue No', 'Student ID', 'First Name', 'Last Name', 'Email', 'College ID', 'Booked At']);
+    fputcsv($output, ['Queue No', 'Student ID', 'First Name', 'Last Name', 'Email', 'College ID']);
 
     foreach ($students as $row) {
         fputcsv($output, $row);
