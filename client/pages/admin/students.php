@@ -233,8 +233,34 @@
       });
 
       $(document).on('click', '.btn-email', function () {
-        const id = $(this).closest('tr').find('.student-id-cell').text();
-        alert('Sending reminder email to Student ID: ' + id);
+        const $btn = $(this);
+        const id = $btn.closest('tr').find('.student-id-cell').text().trim();
+        
+        if ($btn.hasClass('loading')) return;
+        
+        $btn.addClass('loading').prop('disabled', true);
+        const originalHtml = $btn.html();
+        $btn.html('<span class="spinner-small"></span>');
+
+        $.ajax({
+          url: '../../../server/api/students/send_reminder.php',
+          method: 'POST',
+          data: { student_id: id },
+          dataType: 'json',
+          success: function (response) {
+            if (response.success) {
+              alert('Success: ' + response.message);
+            } else {
+              alert('Error: ' + response.message);
+            }
+          },
+          error: function () {
+            alert('Failed to connect to the server.');
+          },
+          complete: function () {
+            $btn.removeClass('loading').prop('disabled', false).html(originalHtml);
+          }
+        });
       });
     });
   </script>

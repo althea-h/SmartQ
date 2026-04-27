@@ -54,8 +54,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             header('Location: ../../../client/pages/login.php');
             exit();
         }
-    } catch (PDOException $e) {
-        $_SESSION['error'] = "Database Error: " . $e->getMessage();
+    } catch (Exception $e) {
+        $_SESSION['error'] = "Login Error: " . $e->getMessage();
         header('Location: ../../../client/pages/login.php');
         exit();
     }

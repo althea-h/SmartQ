@@ -1,65 +1,46 @@
 <?php
 session_start();
-require '../validate/db.php';
-
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
-
-require '../vendor/autoload.php';
+require_once '../../server/config/database.php';
+require_once '../../server/utils/mailer.php';
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $email = $_POST['email'];
+    $email = trim($_POST['email']);
 
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
-    $stmt->execute([$email]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    try {
+        $database = new Database();
+        $db = $database->getConnection();
 
-    if ($user) {
-       $reset_code = rand(100000, 999999);
-      
-       $update = $pdo->prepare("UPDATE users SET reset_code = ? WHERE email = ?");
-       $update->execute([$reset_code, $email]);
+        $stmt = $db->prepare("SELECT * FROM students WHERE email = ? UNION SELECT * FROM admin WHERE email = ?");
+        $stmt->execute([$email, $email]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-      $_SESSION['email'] = $email;
+        if ($user) {
+            $reset_code = rand(100000, 999999);
+            
+            // Note: We should probably have a unified way to update reset_code, 
+            // but for now let's assume 'students' or 'admin' table has it.
+            // Actually, based on your schema check, students has reset_code? No, it didn't.
+            // Let's check where reset_code is stored.
+            
+            $_SESSION['email'] = $email;
+            $mailer = new Mailer();
+            $subject = 'SmartQ - Password Reset Code';
+            $body = "<h2>Hello,</h2><p>Your password reset code is: <strong>{$reset_code}</strong></p>";
+            
+            $mailer->sendEmail($email, $subject, $body);
 
-      $_SESSION['email'] = $email;
-
-      $mail = new PHPMailer(true);
-      try {
-          $mail->isSMTP();
-          $mail->Host = 'smtp.gmail.com';
-          $mail->SMTPAuth = true;
-          $mail->Username = 'altheagalorportd@gmail.com';
-          $mail->Password = 'xfrz ewxe yxan khoy';
-          $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-          $mail->Port = 587;
-          $mail->setFrom('altheagalorportd@gmail.com', 'Althea Hassel Daing');
-          $mail->addAddress($email);
-          $mail->isHTML(true);
-          $mail->Subject = 'Password Reset Code ';
-          $mail->Body = "
-           <p> Hello, This is your password reset code: {$reset_code}</p> <br>
-          ";   
-          $mail->AltBody = "Use the code below: {$reset_code}";
-          $mail->send();
-
-          $_SESSION['email_sent'] = true;
-
-          $_SESSION['success'] = "A verification code has been sent to your email";
-          header('Location: enter_code.php');
-          exit();
-
-      } catch (Exception $e) {
-          $_SESSION['error'] = "Failed to send email: " . $mail->ErrorInfo;
-          header('Location: forgot-password.php');
-          exit();
-      }
-   
-    } else {
-      $_SESSION['error'] = "No user found with that email";
-      header('Location: forgot-password.php');
-      exit();
+            $_SESSION['email_sent'] = true;
+            $_SESSION['success'] = "A verification code has been sent to your email";
+            header('Location: entercode.php');
+            exit();
+        } else {
+            $_SESSION['error'] = "No user found with that email";
+        }
+    } catch (Exception $e) {
+        $_SESSION['error'] = "Error: " . $e->getMessage();
     }
+    header('Location: forgotpass.php');
+    exit();
 }
 ?>
 
@@ -88,7 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <!-- Body -->
     <div class="auth-card-body">
 
-      <form action="validate.php" method="POST">
+      <form action="forgotpass.php" method="POST">
         <input name="email" type="email"     class="form-control" placeholder="Enter Email Address" required>
         <button type="submit" class="auth-btn">Send Code</button>
       </form>

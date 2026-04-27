@@ -17,49 +17,7 @@
 
   <title>SmartQ | Manage Queue</title>
   <style>
-    .manage-header {
-      background: var(--card-bg);
-      padding: var(--space-lg) var(--space-xl);
-      border-radius: var(--radius-lg);
-      border: 1px solid rgba(0, 0, 0, 0.04);
-      box-shadow: var(--shadow-sm);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: var(--space-xl);
-    }
 
-    .queue-details h2 {
-      font-size: var(--font-lg);
-      margin-bottom: 4px;
-    }
-
-    .queue-meta {
-      display: flex;
-      gap: var(--space-md);
-      color: var(--text-muted);
-      font-size: var(--font-sm);
-    }
-
-    .meta-item {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .btn-back {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-weight: 600;
-      font-size: var(--font-sm);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .btn-back:hover {
-      color: var(--primary-color);
-    }
   </style>
 </head>
 
@@ -79,7 +37,13 @@
         <div class="manage-container">
 
           <!-- ── Back & Header ── -->
-          <a href="queue.php" class="btn-back">Back to Schedules</a>
+          <a href="queue.php" class="btn-back">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 12H5M12 19l-7-7 7-7" />
+            </svg>
+            Back to Schedules
+          </a>
 
           <header class="manage-header" style="margin-top: var(--space-md);">
             <div class="queue-details">
@@ -117,8 +81,19 @@
                   <td><span class="status-badge badge-pending">Pending</span></td>
                   <td>
                     <div class="action-buttons" style="justify-content: flex-end;">
-                      <button class="btn-action btn-validate" title="Approve ID"></button>
-                      <button class="btn-action" title="Reject / Missing Doc" style="color: var(--error);"></button>
+                      <button class="btn-action btn-validate" title="Approve ID">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
+                          viewBox="0 0 24 24">
+                          <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                      </button>
+                      <button class="btn-action" title="Reject / Missing Doc" style="color: var(--error);">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
+                          viewBox="0 0 24 24">
+                          <line x1="18" y1="6" x2="6" y2="18"></line>
+                          <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -132,8 +107,19 @@
                   <td><span class="status-badge badge-pending">Pending</span></td>
                   <td>
                     <div class="action-buttons" style="justify-content: flex-end;">
-                      <button class="btn-action btn-validate" title="Approve ID"></button>
-                      <button class="btn-action" title="Reject / Missing Doc" style="color: var(--error);"></button>
+                      <button class="btn-action btn-validate" title="Approve ID">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
+                          viewBox="0 0 24 24">
+                          <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                      </button>
+                      <button class="btn-action" title="Reject / Missing Doc" style="color: var(--error);">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
+                          viewBox="0 0 24 24">
+                          <line x1="18" y1="6" x2="6" y2="18"></line>
+                          <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -147,8 +133,19 @@
                   <td><span class="status-badge badge-pending">Pending</span></td>
                   <td>
                     <div class="action-buttons" style="justify-content: flex-end;">
-                      <button class="btn-action btn-validate" title="Approve ID"></button>
-                      <button class="btn-action" title="Reject / Missing Doc" style="color: var(--error);"></button>
+                      <button class="btn-action btn-validate" title="Approve ID">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
+                          viewBox="0 0 24 24">
+                          <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                      </button>
+                      <button class="btn-action" title="Reject / Missing Doc" style="color: var(--error);">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
+                          viewBox="0 0 24 24">
+                          <line x1="18" y1="6" x2="6" y2="18"></line>
+                          <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                      </button>
                     </div>
                   </td>
                 </tr>

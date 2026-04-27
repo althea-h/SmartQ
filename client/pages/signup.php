@@ -112,7 +112,7 @@ session_start();
               <option value="106">CAS</option>
               <option value="103">COB</option>
               <option value="104">COE</option>
-              <option value="102">CN</option>
+              <option value="102">CON</option>
               <option value="105">CPAG</option>
             </select>
           </div>
