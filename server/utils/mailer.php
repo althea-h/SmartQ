@@ -25,17 +25,27 @@ class Mailer
 
         // Server settings
         $this->mail->isSMTP();
-        $this->mail->Host       = $_SERVER['SMTP_HOST'] ?? $_ENV['SMTP_HOST'] ?? 'smtp.gmail.com';
-        $this->mail->SMTPAuth   = true;
-        $this->mail->Username   = $_SERVER['SMTP_USER'] ?? $_ENV['SMTP_USER'] ?? '';
-        $this->mail->Password   = $_SERVER['SMTP_PASS'] ?? $_ENV['SMTP_PASS'] ?? '';
+        $this->mail->Host = $_SERVER['SMTP_HOST'] ?? $_ENV['SMTP_HOST'] ?? 'smtp.gmail.com';
+        $this->mail->SMTPAuth = true;
+        $this->mail->Username = $_SERVER['SMTP_USER'] ?? $_ENV['SMTP_USER'] ?? '';
+        $this->mail->Password = $_SERVER['SMTP_PASS'] ?? $_ENV['SMTP_PASS'] ?? '';
         $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $this->mail->Port       = $_SERVER['SMTP_PORT'] ?? $_ENV['SMTP_PORT'] ?? 587;
+        $this->mail->Port = $_SERVER['SMTP_PORT'] ?? $_ENV['SMTP_PORT'] ?? 587;
 
         // Default From
         $fromEmail = $_SERVER['SMTP_FROM'] ?? $_ENV['SMTP_FROM'] ?? '';
-        $fromName  = $_SERVER['SMTP_FROM_NAME'] ?? $_ENV['SMTP_FROM_NAME'] ?? 'SmartQ Admin';
+        $fromName = $_SERVER['SMTP_FROM_NAME'] ?? $_ENV['SMTP_FROM_NAME'] ?? 'SmartQ Admin';
         $this->mail->setFrom($fromEmail, $fromName);
+    }
+
+    public function addEmbeddedImage($path, $cid, $name = '')
+    {
+        try {
+            $this->mail->addEmbeddedImage($path, $cid, $name);
+            return true;
+        } catch (Exception $e) {
+            throw new Exception("Could not embed image: {$e->getMessage()}");
+        }
     }
 
     public function sendEmail($to, $subject, $body, $altBody = '')
@@ -45,10 +55,14 @@ class Mailer
             $this->mail->addAddress($to);
             $this->mail->isHTML(true);
             $this->mail->Subject = $subject;
-            $this->mail->Body    = $body;
+            $this->mail->Body = $body;
             $this->mail->AltBody = $altBody ?: strip_tags($body);
 
             $this->mail->send();
+
+            // Clear attachments/embedded images after sending so they don't persist to the next email
+            $this->mail->clearAttachments();
+
             return true;
         } catch (Exception $e) {
             throw new Exception("Message could not be sent. Mailer Error: {$this->mail->ErrorInfo}");
