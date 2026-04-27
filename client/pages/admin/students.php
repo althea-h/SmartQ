@@ -235,9 +235,9 @@
       $(document).on('click', '.btn-email', function () {
         const $btn = $(this);
         const id = $btn.closest('tr').find('.student-id-cell').text().trim();
-        
+
         if ($btn.hasClass('loading')) return;
-        
+
         $btn.addClass('loading').prop('disabled', true);
         const originalHtml = $btn.html();
         $btn.html('<span class="spinner-small"></span>');
