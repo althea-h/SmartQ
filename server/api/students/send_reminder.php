@@ -42,7 +42,7 @@ try {
     // Embed the header image
     $headerPath = realpath(__DIR__ . '/../../../client/assets/img/sq_header.png');
     if ($headerPath) {
-        $mailer->addEmbeddedImage($headerPath, 'sq_header');
+        $mailer->addEmbeddedImage($headerPath, 'sq_header', 'sq_header.png');
     }
 
     $subject = "SmartQ - ID Validation Reminder";
