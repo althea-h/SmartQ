@@ -22,12 +22,13 @@ try {
         die("Schedule not found");
     }
 
-    // Fetch booked students
-    $query = "SELECT ql.queue_no, ql.booked_at, s.student_id, s.first_name, s.last_name, s.email, s.college_id 
+    // Fetch booked students with college names
+    $query = "SELECT ql.queue_number, s.student_id, s.first_name, s.last_name, s.email, c.college_name 
               FROM queue_list ql
               JOIN students s ON ql.student_id = s.student_id
+              LEFT JOIN colleges c ON s.college_id = c.college_id
               WHERE ql.schedule_id = :id
-              ORDER BY ql.queue_no ASC";
+              ORDER BY ql.queue_number ASC";
     
     $stmt = $db->prepare($query);
     $stmt->bindParam(':id', $schedule_id);
@@ -50,7 +51,7 @@ try {
     fputcsv($output, ['Status', $schedule['status']]);
     fputcsv($output, []); // Blank line
 
-    fputcsv($output, ['Queue No', 'Student ID', 'First Name', 'Last Name', 'Email', 'College ID', 'Booked At']);
+    fputcsv($output, ['Queue No', 'Student ID', 'First Name', 'Last Name', 'Email', 'College']);
 
     foreach ($students as $row) {
         fputcsv($output, $row);

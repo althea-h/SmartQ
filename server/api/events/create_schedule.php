@@ -32,8 +32,10 @@ try {
     // In this case, we'll just set it to start_time
     $opening_time = $start_time;
 
-    $query = "INSERT INTO queue_schedule (schedule_id, schedule_date, opening_time, start_time, end_time, slot_limit) 
-              VALUES (:id, :date, :opening, :start, :end, :limit)";
+    $admin_id = $_SESSION['user_id'] ?? null;
+
+    $query = "INSERT INTO queue_schedule (schedule_id, schedule_date, opening_time, start_time, end_time, slot_limit, created_by) 
+              VALUES (:id, :date, :opening, :start, :end, :limit, :creator)";
     
     $stmt = $db->prepare($query);
     $stmt->bindParam(':id', $schedule_id);
@@ -42,6 +44,7 @@ try {
     $stmt->bindParam(':start', $start_time);
     $stmt->bindParam(':end', $end_time);
     $stmt->bindParam(':limit', $slot_limit);
+    $stmt->bindParam(':creator', $admin_id);
 
     if ($stmt->execute()) {
         echo json_encode(['success' => true, 'message' => 'Schedule created successfully']);
