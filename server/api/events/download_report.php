@@ -22,13 +22,23 @@ try {
         die("Schedule not found");
     }
 
+<<<<<<< HEAD
+    // Fetch booked students with college names
+    $query = "SELECT ql.queue_number, s.student_id, s.first_name, s.last_name, s.email, c.college_name 
+=======
     // Fetch booked students
     $query = "SELECT ql.queue_number, s.student_id, s.first_name, s.last_name, s.email, s.college_id 
+>>>>>>> 0bf7db5840815982eca2224110ed01071bbb1e89
               FROM queue_list ql
               JOIN students s ON ql.student_id = s.student_id
+              LEFT JOIN colleges c ON s.college_id = c.college_id
               WHERE ql.schedule_id = :id
               ORDER BY ql.queue_number ASC";
+<<<<<<< HEAD
+
+=======
     
+>>>>>>> 0bf7db5840815982eca2224110ed01071bbb1e89
     $stmt = $db->prepare($query);
     $stmt->bindParam(':id', $schedule_id);
     $stmt->execute();
@@ -36,7 +46,7 @@ try {
 
     // Generate CSV
     $filename = "SmartQ_Report_" . $schedule_id . "_" . date('Y-m-d') . ".csv";
-    
+
     header('Content-Type: text/csv');
     header('Content-Disposition: attachment; filename="' . $filename . '"');
 
@@ -50,7 +60,11 @@ try {
     fputcsv($output, ['Status', $schedule['status']]);
     fputcsv($output, []); // Blank line
 
+<<<<<<< HEAD
+    fputcsv($output, ['Queue No', 'Student ID', 'First Name', 'Last Name', 'Email', 'College']);
+=======
     fputcsv($output, ['Queue No', 'Student ID', 'First Name', 'Last Name', 'Email', 'College ID']);
+>>>>>>> 0bf7db5840815982eca2224110ed01071bbb1e89
 
     foreach ($students as $row) {
         fputcsv($output, $row);

@@ -74,9 +74,20 @@ try {
     $stmt->bindParam(':qnum', $queue_number);
 
     if ($stmt->execute()) {
+        // 6. Update student status to 'Pending Review' (status_id = 3)
+        $updateStatusQuery = "UPDATE students SET status_id = 3 WHERE student_id = :sid";
+        $updateStatusStmt = $db->prepare($updateStatusQuery);
+        $updateStatusStmt->bindParam(':sid', $student_id);
+        $updateStatusStmt->execute();
+
+        // Also update session to reflect status immediately
+        if(isset($_SESSION['user']['student_id']) && $_SESSION['user']['student_id'] == $student_id) {
+            $_SESSION['user']['status_id'] = 3;
+        }
+
         echo json_encode([
-            'success' => true, 
-            'message' => 'Booking successful', 
+            'success' => true,
+            'message' => 'Booking successful',
             'queue_number' => $queue_number
         ]);
     } else {
