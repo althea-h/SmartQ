@@ -9,6 +9,7 @@
  */
 
 $active = isset($_GET['active']) ? htmlspecialchars($_GET['active']) : 'dashboard';
+$role = isset($_GET['role']) ? htmlspecialchars($_GET['role']) : 'admin';
 
 // Helper: load an SVG file and inject a CSS class into the root <svg> element
 function sidebar_icon($filename)
@@ -35,36 +36,58 @@ function sidebar_icon($filename)
   <!-- Navigation -->
   <nav class="sidebar-nav">
     <ul>
-      <li>
-        <a href="dashboard.php" class="sidebar-link <?= $active === 'dashboard' ? 'active' : '' ?>">
-          <?= sidebar_icon('dashboard.svg') ?>
-          <span class="sidebar-label">Dashboard</span>
-        </a>
-      </li>
-      <li>
-        <a href="queue.php" class="sidebar-link <?= $active === 'queue' ? 'active' : '' ?>">
-          <?= sidebar_icon('queue.svg') ?>
-          <span class="sidebar-label">Queue</span>
-        </a>
-      </li>
-      <li>
-        <a href="students.php" class="sidebar-link <?= $active === 'students' ? 'active' : '' ?>">
-          <?= sidebar_icon('students.svg') ?>
-          <span class="sidebar-label">Students</span>
-        </a>
-      </li>
-      <li>
-        <a href="reports.php" class="sidebar-link <?= $active === 'reports' ? 'active' : '' ?>">
-          <?= sidebar_icon('reports.svg') ?>
-          <span class="sidebar-label">Reports</span>
-        </a>
-      </li>
-      <li>
-        <a href="settings.php" class="sidebar-link <?= $active === 'settings' ? 'active' : '' ?>">
-          <?= sidebar_icon('settings.svg') ?>
-          <span class="sidebar-label">Settings</span>
-        </a>
-      </li>
+      <?php if ($role === 'admin'): ?>
+        <li>
+          <a href="dashboard.php" class="sidebar-link <?= $active === 'dashboard' ? 'active' : '' ?>">
+            <?= sidebar_icon('dashboard.svg') ?>
+            <span class="sidebar-label">Dashboard</span>
+          </a>
+        </li>
+        <li>
+          <a href="queue.php" class="sidebar-link <?= $active === 'queue' ? 'active' : '' ?>">
+            <?= sidebar_icon('queue.svg') ?>
+            <span class="sidebar-label">Queue</span>
+          </a>
+        </li>
+        <li>
+          <a href="students.php" class="sidebar-link <?= $active === 'students' ? 'active' : '' ?>">
+            <?= sidebar_icon('students.svg') ?>
+            <span class="sidebar-label">Students</span>
+          </a>
+        </li>
+        <li>
+          <a href="reports.php" class="sidebar-link <?= $active === 'reports' ? 'active' : '' ?>">
+            <?= sidebar_icon('reports.svg') ?>
+            <span class="sidebar-label">Reports</span>
+          </a>
+        </li>
+        <li>
+          <a href="settings.php" class="sidebar-link <?= $active === 'settings' ? 'active' : '' ?>">
+            <?= sidebar_icon('settings.svg') ?>
+            <span class="sidebar-label">Settings</span>
+          </a>
+        </li>
+
+      <?php else: // Student Role ?>
+        <li>
+          <a href="student-dashboard.php" class="sidebar-link <?= $active === 'dashboard' ? 'active' : '' ?>">
+            <?= sidebar_icon('dashboard.svg') ?>
+            <span class="sidebar-label">My Status</span>
+          </a>
+        </li>
+        <li>
+          <a href="book-queue.php" class="sidebar-link <?= $active === 'book' ? 'active' : '' ?>">
+            <?= sidebar_icon('queue.svg') ?>
+            <span class="sidebar-label">Validate ID</span>
+          </a>
+        </li>
+        <li>
+          <a href="profile.php" class="sidebar-link <?= $active === 'profile' ? 'active' : '' ?>">
+            <?= sidebar_icon('settings.svg') ?>
+            <span class="sidebar-label">Profile</span>
+          </a>
+        </li>
+      <?php endif; ?>
     </ul>
   </nav>
 

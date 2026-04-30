@@ -50,75 +50,103 @@
           </div>
 
           <!-- ── Schedule Grid ── -->
-          <div class="schedule-grid">
+          <div class="schedule-grid" id="schedule-grid">
+            <?php
+            require_once "../../../server/config/database.php";
+            $database = new Database();
+            $db = $database->getConnection();
 
-            <!-- Card 1 -->
-            <div class="schedule-card">
-              <div class="schedule-card-header">
-                <div class="schedule-date">
-                  <span class="date-day">25</span>
-                  <span class="date-month">April 2024</span>
-                </div>
-                <span class="schedule-status status-active">Active</span>
-              </div>
-              <div class="schedule-info">
-                <div class="info-item">
-                  <span class="info-label">Time Slot</span>
-                  <span class="info-value">08:00 AM - 12:00 PM</span>
-                </div>
-                <div class="info-item">
-                  <span class="info-label">Catered</span>
-                  <span class="info-value">150 Students</span>
-                </div>
-              </div>
-              <div class="schedule-progress">
-                <div class="progress-labels">
-                  <span>Booking Progress</span>
-                  <span>120 / 150</span>
-                </div>
-                <div class="progress-track">
-                  <div class="progress-bar" style="width: 80%"></div>
-                </div>
-              </div>
-              <div class="schedule-actions">
-                <a href="manage-queue.php?id=1" class="btn-manage"
-                  style="text-align: center; text-decoration: none;">Manage Queue</a>
-              </div>
-            </div>
+            try {
+                // Fetch schedules (all for now, or just active)
+                $query = "SELECT qs.*, 
+                          (SELECT COUNT(*) FROM queue_list ql WHERE ql.schedule_id = qs.schedule_id) as booked_count
+                          FROM queue_schedule qs 
+                          ORDER BY (CASE WHEN qs.status = 'active' THEN 0 ELSE 1 END), qs.schedule_date DESC, qs.start_time DESC";
+                $stmt = $db->prepare($query);
+                $stmt->execute();
+                $schedules = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            <!-- Card 2 -->
-            <div class="schedule-card">
-              <div class="schedule-card-header">
-                <div class="schedule-date">
-                  <span class="date-day">26</span>
-                  <span class="date-month">April 2024</span>
-                </div>
-                <span class="schedule-status status-full">Almost Full</span>
-              </div>
-              <div class="schedule-info">
-                <div class="info-item">
-                  <span class="info-label">Time Slot</span>
-                  <span class="info-value">09:00 AM - 04:00 PM</span>
-                </div>
-                <div class="info-item">
-                  <span class="info-label">Catered</span>
-                  <span class="info-value">200 Students</span>
-                </div>
-              </div>
-              <div class="schedule-progress">
-                <div class="progress-labels">
-                  <span>Booking Progress</span>
-                  <span>195 / 200</span>
-                </div>
-                <div class="progress-track">
-                  <div class="progress-bar" style="width: 97.5%; background: var(--warning);"></div>
-                </div>
-              </div>
-              <div class="schedule-actions">
-                <button class="btn-manage">Manage Queue</button>
-              </div>
-            </div>
-
+                if (count($schedules) > 0) {
+                    foreach ($schedules as $row) {
+                        $date = new DateTime($row['schedule_date']);
+                        $day = $date->format('d');
+                        $monthYear = $date->format('F Y');
+                        
+                        $startTime = new DateTime($row['start_time']);
+                        $endTime = new DateTime($row['end_time']);
+                        $timeSlot = $startTime->format('h:i A') . ' - ' . $endTime->format('h:i A');
+                        
+                        $booked = $row['booked_count'];
+                        $limit = $row['slot_limit'];
+                        $percentage = ($limit > 0) ? ($booked / $limit) * 100 : 0;
+                        $status = $row['status'] ?? 'active';
+                        
+                        $statusClass = 'status-active';
+                        $statusText = 'Active';
+                        
+                        if ($status === 'cancelled') {
+                            $statusClass = 'status-full'; // Reuse red color
+                            $statusText = 'Cancelled';
+                        } elseif ($percentage >= 100) {
+                            $statusClass = 'status-full';
+                            $statusText = 'Full';
+                        } elseif ($percentage >= 80) {
+                            $statusClass = 'status-full'; 
+                            $statusText = 'Almost Full';
+                        }
+                        
+                        echo '
+                        <div class="schedule-card '.($status === 'cancelled' ? 'cancelled' : '').'" data-id="'.$row['schedule_id'].'">
+                          <div class="schedule-card-header">
+                            <div class="schedule-date">
+                              <span class="date-day">'.$day.'</span>
+                              <span class="date-month">'.$monthYear.'</span>
+                            </div>
+                            <span class="schedule-status '.$statusClass.'">'.$statusText.'</span>
+                          </div>
+                          <div class="schedule-info">
+                            <div class="info-item">
+                              <span class="info-label">Time Slot</span>
+                              <span class="info-value">'.$timeSlot.'</span>
+                            </div>
+                            <div class="info-item">
+                              <span class="info-label">Catered</span>
+                              <span class="info-value">'.$limit.' Students</span>
+                            </div>
+                          </div>
+                          <div class="schedule-progress">
+                            <div class="progress-labels">
+                              <span>Booking Progress</span>
+                              <span>'.$booked.' / '.$limit.'</span>
+                            </div>
+                            <div class="progress-track">
+                              <div class="progress-bar" style="width: '.$percentage.'%; '.($percentage >= 90 ? 'background: var(--warning);' : '').' '.($status === 'cancelled' ? 'background: #cbd5e1;' : '').'"></div>
+                            </div>
+                          </div>
+                          <div class="schedule-actions" style="gap: 10px; flex-wrap: wrap;">';
+                          if ($status === 'active') {
+                            echo '<a href="manage-queue.php?id='.$row['schedule_id'].'" class="btn-manage" style="text-align: center; text-decoration: none; flex: 1; min-width: 100px;">Manage</a>
+                                  <button class="btn-cancel-schedule" data-id="'.$row['schedule_id'].'" style="background: #fee2e2; color: #ef4444; border: none; padding: 10px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; flex: 1; min-width: 100px;">Cancel</button>';
+                          } else {
+                            echo '<div style="display: flex; flex-direction: column; width: 100%; gap: 10px;">
+                                    <div style="display: flex; gap: 10px; width: 100%;">
+                                      <a href="../../../server/api/events/download_report.php?id='.$row['schedule_id'].'" class="btn-download" style="background: #dcfce7; color: #16a34a; text-decoration: none; text-align: center; padding: 10px; border-radius: 8px; font-weight: 600; flex: 1;">Report</a>
+                                      <button class="btn-remove-schedule" data-id="'.$row['schedule_id'].'" style="background: #f1f5f9; color: #64748b; border: none; padding: 10px; border-radius: 8px; font-weight: 600; cursor: pointer; flex: 1;">Remove</button>
+                                    </div>
+                                    <button disabled style="width: 100%; background: #f1f5f9; color: #94a3b8; border: none; padding: 10px; border-radius: 8px; font-weight: 600;">Schedule Cancelled</button>
+                                  </div>';
+                          }
+                        echo '
+                          </div>
+                        </div>';
+                    }
+                } else {
+                    echo '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">No schedules created yet.</div>';
+                }
+            } catch (Exception $e) {
+                echo '<div style="grid-column: 1/-1; color: var(--error);">Error loading schedules: '.$e->getMessage().'</div>';
+            }
+            ?>
           </div>
         </div>
       </main>
@@ -134,26 +162,26 @@
         <h3>Create New Schedule</h3>
         <button class="btn-close" id="closeModal">&times;</button>
       </div>
-      <form class="schedule-form">
+      <form class="schedule-form" id="createScheduleForm">
         <div class="form-group">
           <label>Validation Date</label>
-          <input type="date" required>
+          <input type="date" name="date" required>
         </div>
         <div class="form-row">
           <div class="form-group">
             <label>Start Time</label>
-            <input type="time" required>
+            <input type="time" name="start_time" required>
           </div>
           <div class="form-group">
             <label>End Time</label>
-            <input type="time" required>
+            <input type="time" name="end_time" required>
           </div>
         </div>
         <div class="form-group">
           <label>Max Students to Cater</label>
-          <input type="number" placeholder="e.g. 100" required>
+          <input type="number" name="slot_limit" placeholder="e.g. 100" required>
         </div>
-        <button type="submit" class="btn-add-schedule" style="width: 100%; justify-content: center; margin-top: 10px;">
+        <button type="submit" class="btn-add-schedule" id="btn-save-schedule" style="width: 100%; justify-content: center; margin-top: 10px;">
           Save Schedule
         </button>
       </form>
@@ -174,11 +202,91 @@
         if (e.target == modal[0]) modal.hide();
       });
 
-      // Handle Form Submit (Static Demo)
-      $('.schedule-form').submit(function (e) {
+      // Handle Form Submit
+      $('#createScheduleForm').submit(function (e) {
         e.preventDefault();
-        alert('Schedule created successfully! (Static demo)');
-        modal.hide();
+        
+        const $btn = $('#btn-save-schedule');
+        const formData = $(this).serialize();
+        
+        $btn.prop('disabled', true).text('Saving...');
+
+        $.ajax({
+          url: '../../../server/api/events/create_schedule.php',
+          method: 'POST',
+          data: formData,
+          dataType: 'json',
+          success: function (response) {
+            if (response.success) {
+              alert('Success: ' + response.message);
+              location.reload(); // Reload to see the new schedule
+            } else {
+              alert('Error: ' + response.message);
+              $btn.prop('disabled', false).text('Save Schedule');
+            }
+          },
+          error: function () {
+            alert('Failed to connect to the server.');
+            $btn.prop('disabled', false).text('Save Schedule');
+          }
+        });
+      });
+
+      // Handle Cancel Schedule
+      $(document).on('click', '.btn-cancel-schedule', function() {
+        const id = $(this).data('id');
+        if (confirm('Are you sure you want to cancel this schedule? This action cannot be undone.')) {
+          const $btn = $(this);
+          $btn.prop('disabled', true).text('...');
+          
+          $.ajax({
+            url: '../../../server/api/events/cancel_schedule.php',
+            method: 'POST',
+            data: { schedule_id: id },
+            dataType: 'json',
+            success: function(response) {
+              if (response.success) {
+                location.reload();
+              } else {
+                alert('Error: ' + response.message);
+                $btn.prop('disabled', false).text('Cancel');
+              }
+            },
+            error: function() {
+              alert('Failed to connect to the server.');
+              $btn.prop('disabled', false).text('Cancel');
+            }
+          });
+        }
+      });
+
+      // Handle Remove Schedule
+      $(document).on('click', '.btn-remove-schedule', function() {
+        const id = $(this).data('id');
+        if (confirm('Are you sure you want to permanently REMOVE this schedule from the list? All associated queue data will be deleted.')) {
+          const $btn = $(this);
+          $btn.prop('disabled', true).text('...');
+          
+          $.ajax({
+            url: '../../../server/api/events/delete_schedule.php',
+            method: 'POST',
+            data: { schedule_id: id },
+            dataType: 'json',
+            success: function(response) {
+              if (response.success) {
+                alert(response.message);
+                location.reload();
+              } else {
+                alert('Error: ' + response.message);
+                $btn.prop('disabled', false).text('Remove');
+              }
+            },
+            error: function() {
+              alert('Failed to connect to the server.');
+              $btn.prop('disabled', false).text('Remove');
+            }
+          });
+        }
       });
     });
   </script>
