@@ -29,7 +29,7 @@ try {
               LEFT JOIN colleges c ON s.college_id = c.college_id
               WHERE ql.schedule_id = :id
               ORDER BY ql.queue_number ASC";
-    
+
     $stmt = $db->prepare($query);
     $stmt->bindParam(':id', $schedule_id);
     $stmt->execute();
@@ -37,7 +37,7 @@ try {
 
     // Generate CSV
     $filename = "SmartQ_Report_" . $schedule_id . "_" . date('Y-m-d') . ".csv";
-    
+
     header('Content-Type: text/csv');
     header('Content-Disposition: attachment; filename="' . $filename . '"');
 
