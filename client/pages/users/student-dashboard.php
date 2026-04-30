@@ -78,7 +78,7 @@ $current_status = $status_map[$status_id] ?? $status_map[2];
           <?php
           try {
             // Fetch the latest booking for the student that is in an active schedule
-            $query = "SELECT ql.queue_number, qs.schedule_date, qs.start_time, qs.end_time 
+            $query = "SELECT ql.queue_number, ql.schedule_id, qs.schedule_date, qs.start_time, qs.end_time 
                         FROM queue_list ql
                         JOIN queue_schedule qs ON ql.schedule_id = qs.schedule_id
                         WHERE ql.student_id = :sid AND qs.status = 'active' AND qs.schedule_date >= CURDATE()
@@ -93,16 +93,22 @@ $current_status = $status_map[$status_id] ?? $status_map[2];
               $bStart = new DateTime($booking['start_time']);
               $bEnd = new DateTime($booking['end_time']);
               ?>
-                  <div class="queue-highlight">
-                    <div class="queue-num-box">
-                      <span>No.</span>
-                      <span><?php echo $booking['queue_number']; ?></span>
+                  <div class="queue-highlight" style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                      <div class="queue-num-box">
+                        <span>No.</span>
+                        <span><?php echo $booking['queue_number']; ?></span>
+                      </div>
+                      <div class="queue-details">
+                        <h4 style="margin: 0; color: #1e293b;">Active Queue Booking</h4>
+                        <p style="margin: 5px 0 0; color: #64748b;">Schedule: <?php echo $bDate->format('F d, Y'); ?>
+                          (<?php echo $bStart->format('h:i A') . ' - ' . $bEnd->format('h:i A'); ?>)</p>
+                      </div>
                     </div>
-                    <div class="queue-details">
-                      <h4>Active Queue Booking</h4>
-                      <p>Schedule: <?php echo $bDate->format('F d, Y'); ?>
-                        (<?php echo $bStart->format('h:i A') . ' - ' . $bEnd->format('h:i A'); ?>)</p>
-                    </div>
+                    <button class="btn-cancel-booking" data-id="<?php echo $booking['schedule_id']; ?>" 
+                            style="background: #fee2e2; color: #dc2626; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s;">
+                      Cancel
+                    </button>
                   </div>
                 <?php
             endif;
@@ -190,6 +196,38 @@ $current_status = $status_map[$status_id] ?? $status_map[2];
 
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script src="../../scripts/component-loader.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('.btn-cancel-booking').click(function () {
+        const scheduleId = $(this).data('id');
+        const $btn = $(this);
+
+        if (confirm('Are you sure you want to cancel your booking?')) {
+          $btn.prop('disabled', true).text('Cancelling...');
+
+          $.ajax({
+            url: '../../../server/api/queue/cancel_booking.php',
+            method: 'POST',
+            data: { schedule_id: scheduleId },
+            dataType: 'json',
+            success: function (response) {
+              if (response.success) {
+                alert('Booking cancelled successfully.');
+                location.reload();
+              } else {
+                alert('Error: ' + response.message);
+                $btn.prop('disabled', false).text('Cancel');
+              }
+            },
+            error: function () {
+              alert('Failed to connect to the server.');
+              $btn.prop('disabled', false).text('Cancel');
+            }
+          });
+        }
+      });
+    });
+  </script>
 
 </body>
 

@@ -56,6 +56,21 @@ $user = $_SESSION['student'];
                             <h3 style="margin-bottom: 5px;">You are already Validated!</h3>
                             <p>You don\'t need to book any more validation schedules.</p>
                           </div>';
+              } else {
+                // Check if student has ANY active booking
+                $active_booking_query = "SELECT 1 FROM queue_list ql 
+                                         JOIN queue_schedule qs ON ql.schedule_id = qs.schedule_id 
+                                         WHERE ql.student_id = :sid AND qs.status = 'active' AND qs.schedule_date >= CURDATE() 
+                                         LIMIT 1";
+                $ab_stmt = $db->prepare($active_booking_query);
+                $ab_stmt->bindParam(':sid', $user['student_id']);
+                $ab_stmt->execute();
+                if ($ab_stmt->fetch()) {
+                  echo '<div style="grid-column: 1/-1; background: #fff7ed; color: #c2410c; padding: 20px; border-radius: 16px; margin-bottom: 20px; text-align: center; border: 1px solid #fed7aa;">
+                              <h3 style="margin-bottom: 5px;">Active Booking Found</h3>
+                              <p>You already have an active validation schedule. You cannot book another one until the current one is completed or cancelled.</p>
+                            </div>';
+                }
               }
 
               // Fetch only active schedules
