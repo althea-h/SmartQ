@@ -65,10 +65,9 @@ try {
     $queue_number = $booked_count + 1;
 
     // 5. Book the slot
-    $query = "INSERT INTO queue_list (created_by, student_id, schedule_id, queue_number) 
-              VALUES (:creator, :sid, :schid, :qnum)";
+    $query = "INSERT INTO queue_list (student_id, schedule_id, queue_number) 
+              VALUES (:sid, :schid, :qnum)";
     $stmt = $db->prepare($query);
-    $stmt->bindParam(':creator', $student_id);
     $stmt->bindParam(':sid', $student_id);
     $stmt->bindParam(':schid', $schedule_id);
     $stmt->bindParam(':qnum', $queue_number);
@@ -81,7 +80,7 @@ try {
         $updateStatusStmt->execute();
 
         // Also update session to reflect status immediately
-        if(isset($_SESSION['user']['student_id']) && $_SESSION['user']['student_id'] == $student_id) {
+        if (isset($_SESSION['user']['student_id']) && $_SESSION['user']['student_id'] == $student_id) {
             $_SESSION['user']['status_id'] = 3;
         }
 

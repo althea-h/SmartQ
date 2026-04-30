@@ -9,8 +9,17 @@ $database = new Database();
 $db = $database->getConnection();
 
 $user = $_SESSION['user'];
+$student_id = $user['student_id'];
+
+// Always fetch the latest status from the database to reflect admin changes immediately
+$query = "SELECT status_id FROM students WHERE student_id = :sid LIMIT 1";
+$stmt = $db->prepare($query);
+$stmt->bindParam(':sid', $student_id);
+$stmt->execute();
+$db_status = $stmt->fetch(PDO::FETCH_ASSOC);
+
+$status_id = $db_status['status_id'] ?? 2; // Default to Not Validated
 $name = $user['first_name'] . ' ' . $user['last_name'];
-$status_id = $user['status_id'] ?? 2; // Default to Not Validated
 
 // Map status to labels and classes
 $status_map = [
