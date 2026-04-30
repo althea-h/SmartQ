@@ -1,10 +1,10 @@
 <?php
 session_start();
-if (!isset($_SESSION['user']) || $_SESSION['role'] !== 'student') {
+if (!isset($_SESSION['student'])) {
   header('Location: ../login.php');
   exit();
 }
-$user = $_SESSION['user'];
+$user = $_SESSION['student'];
 ?>
 <!DOCTYPE html>
 <html lang="en">

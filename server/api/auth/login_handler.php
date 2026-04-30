@@ -41,17 +41,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $is_hashed = @password_verify($password, $user['password']);
             
             if ($is_plain || $is_hashed) {
-                $_SESSION['user_id'] = $user['student_id'] ?? $user['id'];
-                $_SESSION['first_name'] = $user['first_name'];
-                $_SESSION['last_name'] = $user['last_name'];
-                $_SESSION['email'] = $user['email'];
-                $_SESSION['role'] = $role;
-                $_SESSION['user'] = $user; // Store full user data for dashboard
+                // Remove password from the array before storing in session for security
+                unset($user['password']);
 
-                // Redirect based on role
                 if ($role === 'admin') {
+                    $_SESSION['admin'] = $user;
+                    $_SESSION['admin_id'] = $user['id'];
                     header('Location: ../../../client/pages/admin/dashboard.php');
                 } else {
+                    $_SESSION['student'] = $user;
+                    $_SESSION['student_id'] = $user['student_id'];
                     header('Location: ../../../client/pages/users/student-dashboard.php');
                 }
                 exit();

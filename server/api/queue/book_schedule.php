@@ -4,7 +4,7 @@ header('Content-Type: application/json');
 
 require_once '../../config/database.php';
 
-if (!isset($_SESSION['user']) || $_SESSION['role'] !== 'student') {
+if (!isset($_SESSION['student'])) {
     echo json_encode(['success' => false, 'message' => 'Unauthorized']);
     exit;
 }
@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 $schedule_id = $_POST['schedule_id'] ?? '';
-$student_id = $_SESSION['user']['student_id'];
+$student_id = $_SESSION['student']['student_id'];
 
 if (empty($schedule_id)) {
     echo json_encode(['success' => false, 'message' => 'Schedule ID is required']);
@@ -102,8 +102,8 @@ try {
         $updateStatusStmt->execute();
 
         // Also update session to reflect status immediately
-        if (isset($_SESSION['user']['student_id']) && $_SESSION['user']['student_id'] == $student_id) {
-            $_SESSION['user']['status_id'] = 3;
+        if (isset($_SESSION['student']['student_id']) && $_SESSION['student']['student_id'] == $student_id) {
+            $_SESSION['student']['status_id'] = 3;
         }
 
         echo json_encode([

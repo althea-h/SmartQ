@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION['user']) || $_SESSION['role'] !== 'student') {
+if (!isset($_SESSION['student'])) {
   header('Location: ../login.php');
   exit();
 }
@@ -8,7 +8,7 @@ require_once "../../../server/config/database.php";
 $database = new Database();
 $db = $database->getConnection();
 
-$user = $_SESSION['user'];
+$user = $_SESSION['student'];
 $student_id = $user['student_id'];
 
 // Always fetch the latest status from the database to reflect admin changes immediately

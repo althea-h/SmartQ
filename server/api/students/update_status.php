@@ -9,6 +9,12 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
   exit;
 }
 
+// STRICT: Only admins can validate students
+if (!isset($_SESSION['admin'])) {
+    echo json_encode(['success' => false, 'message' => 'Unauthorized: Only administrators can perform this action.']);
+    exit;
+}
+
 $student_id = trim($_POST['student_id'] ?? '');
 $action = trim(strtolower($_POST['action'] ?? '')); // 'approve' or 'reject'
 
@@ -50,9 +56,10 @@ try {
   $now = date('Y-m-d H:i:s');
 
   // Get current logged-in admin details from session
-  $admin_id = $_SESSION['user']['id'] ?? null;
-  $admin_first = $_SESSION['user']['first_name'] ?? '';
-  $admin_last = $_SESSION['user']['last_name'] ?? '';
+  $admin = $_SESSION['admin'];
+  $admin_id = $admin['id'] ?? null;
+  $admin_first = $admin['first_name'] ?? '';
+  $admin_last = $admin['last_name'] ?? '';
   $admin_name = trim($admin_first . ' ' . $admin_last);
 
   // If we don't have an admin name in session, we might need a fallback or error
