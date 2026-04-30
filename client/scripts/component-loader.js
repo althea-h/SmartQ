@@ -30,6 +30,20 @@
 (function ($) {
   "use strict";
 
+  // Sidebar toggle for mobile
+  $(document).on('click', '#sidebar-toggle', function() {
+      $('.sidebar').toggleClass('open');
+  });
+
+  // Close sidebar when clicking outside on mobile
+  $(document).on('click', function(e) {
+      if ($(window).width() <= 768) {
+          if (!$(e.target).closest('.sidebar').length && !$(e.target).closest('#sidebar-toggle').length) {
+              $('.sidebar').removeClass('open');
+          }
+      }
+  });
+
   // ── Base path from the page to the components folder ──────
   // Adjust this if your pages live at a different depth.
   // For pages at  client/pages/admin/  →  ../../components/

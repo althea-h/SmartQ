@@ -65,28 +65,18 @@ try {
     $queue_number = $booked_count + 1;
 
     // 5. Book the slot
-    $query = "INSERT INTO queue_list (student_id, schedule_id, queue_number) 
-              VALUES (:sid, :schid, :qnum)";
+    $query = "INSERT INTO queue_list (created_by, student_id, schedule_id, queue_number) 
+              VALUES (:creator, :sid, :schid, :qnum)";
     $stmt = $db->prepare($query);
+    $stmt->bindParam(':creator', $student_id);
     $stmt->bindParam(':sid', $student_id);
     $stmt->bindParam(':schid', $schedule_id);
     $stmt->bindParam(':qnum', $queue_number);
 
     if ($stmt->execute()) {
-        // 6. Update student status to 'Pending Review' (status_id = 3)
-        $updateStatusQuery = "UPDATE students SET status_id = 3 WHERE student_id = :sid";
-        $updateStatusStmt = $db->prepare($updateStatusQuery);
-        $updateStatusStmt->bindParam(':sid', $student_id);
-        $updateStatusStmt->execute();
-
-        // Also update session if possible, or let them re-login/refresh
-        if(isset($_SESSION['user']['student_id']) && $_SESSION['user']['student_id'] == $student_id) {
-            $_SESSION['user']['status_id'] = 3;
-        }
-
         echo json_encode([
-            'success' => true, 
-            'message' => 'Booking successful', 
+            'success' => true,
+            'message' => 'Booking successful',
             'queue_number' => $queue_number
         ]);
     } else {
