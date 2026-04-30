@@ -6,47 +6,47 @@ require_once '../../config/database.php';
 require_once '../../utils/mailer.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    echo json_encode(['success' => false, 'message' => 'Invalid request method']);
-    exit;
+	echo json_encode(['success' => false, 'message' => 'Invalid request method']);
+	exit;
 }
 
 $student_id = $_POST['student_id'] ?? '';
 
 if (empty($student_id)) {
-    echo json_encode(['success' => false, 'message' => 'Student ID is required']);
-    exit;
+	echo json_encode(['success' => false, 'message' => 'Student ID is required']);
+	exit;
 }
 
 try {
-    $database = new Database();
-    $db = $database->getConnection();
+	$database = new Database();
+	$db = $database->getConnection();
 
-    // Fetch student details
-    $query = "SELECT first_name, email FROM students WHERE student_id = :id LIMIT 1";
-    $stmt = $db->prepare($query);
-    $stmt->bindParam(':id', $student_id);
-    $stmt->execute();
-    $student = $stmt->fetch(PDO::FETCH_ASSOC);
+	// Fetch student details
+	$query = "SELECT first_name, email FROM students WHERE student_id = :id LIMIT 1";
+	$stmt = $db->prepare($query);
+	$stmt->bindParam(':id', $student_id);
+	$stmt->execute();
+	$student = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if (!$student) {
-        echo json_encode(['success' => false, 'message' => 'Student not found']);
-        exit;
-    }
+	if (!$student) {
+		echo json_encode(['success' => false, 'message' => 'Student not found']);
+		exit;
+	}
 
-    $email = $student['email'];
-    $name = $student['first_name'];
+	$email = $student['email'];
+	$name = $student['first_name'];
 
-    // Send email
-    $mailer = new Mailer();
+	// Send email
+	$mailer = new Mailer();
 
-    // Embed the header image
-    $headerPath = realpath(__DIR__ . '/../../../client/assets/img/sq_header.png');
-    if ($headerPath) {
-        $mailer->addEmbeddedImage($headerPath, 'sq_header');
-    }
+	// Embed the header image
+	$headerPath = realpath(__DIR__ . '/../../../client/assets/img/sq_header.png');
+	if ($headerPath) {
+		$mailer->addEmbeddedImage($headerPath, 'sq_header', 'sq_header.png');
+	}
 
-    $subject = "SmartQ - ID Validation Reminder";
-    $body = "
+	$subject = "SmartQ - ID Validation Reminder";
+	$body = "
     <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;'>
         " . ($headerPath ? "<img src='cid:sq_header' alt='SmartQ Header' style='width: 100%; height: auto; display: block;'>" : "") . "
         <div style='padding: 30px; color: #333; line-height: 1.6;'>
@@ -63,13 +63,13 @@ try {
     ";
 
 
-    if ($mailer->sendEmail($email, $subject, $body)) {
-        echo json_encode(['success' => true, 'message' => 'Reminder email sent successfully to ' . $email]);
-    } else {
-        echo json_encode(['success' => false, 'message' => 'Failed to send email.']);
-    }
+	if ($mailer->sendEmail($email, $subject, $body)) {
+		echo json_encode(['success' => true, 'message' => 'Reminder email sent successfully to ' . $email]);
+	} else {
+		echo json_encode(['success' => false, 'message' => 'Failed to send email.']);
+	}
 
 } catch (Exception $e) {
-    echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+	echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
 }
 
