@@ -43,14 +43,20 @@ try {
 
   $new_status_id = $statusRow['status_id'];
 
-  // Stamp validated_at on approve, clear on reject
-  $now             = ($action === 'approve') ? date('Y-m-d H:i:s') : null;
-  // Pull the admin's full name and ID from the session (set at login)
-  $admin_id        = ($action === 'approve') ? ($_SESSION['user_id']    ?? null) : null;
-  $validated_by    = ($action === 'approve')
-    ? trim(($_SESSION['first_name'] ?? '') . ' ' . ($_SESSION['last_name'] ?? ''))
-    : null;
-  if ($validated_by === '') $validated_by = null;
+  // Start transaction
+  $db->beginTransaction();
+
+  // Stamp validated_at on approve/reject
+  $now = date('Y-m-d H:i:s');
+
+  // Get current logged-in admin details from session
+  $admin_id = $_SESSION['user']['id'] ?? null;
+  $admin_first = $_SESSION['user']['first_name'] ?? '';
+  $admin_last = $_SESSION['user']['last_name'] ?? '';
+  $admin_name = trim($admin_first . ' ' . $admin_last);
+
+  // If we don't have an admin name in session, we might need a fallback or error
+  // But usually, an admin must be logged in to reach this API.
 
   $updateQuery = "UPDATE students
                     SET status_id       = :status_id,
@@ -59,12 +65,22 @@ try {
                         validated_by_id = :validated_by_id
                     WHERE student_id = :student_id";
   $updateStmt = $db->prepare($updateQuery);
-  $updateStmt->bindParam(':status_id',       $new_status_id);
-  $updateStmt->bindParam(':validated_at',    $now);
-  $updateStmt->bindParam(':validated_by',    $validated_by);
+  $updateStmt->bindParam(':status_id', $new_status_id);
+  $updateStmt->bindParam(':validated_at', $now);
+  $updateStmt->bindParam(':validated_by', $admin_name);
   $updateStmt->bindParam(':validated_by_id', $admin_id);
-  $updateStmt->bindParam(':student_id',      $student_id);
+  $updateStmt->bindParam(':student_id', $student_id);
   $updateStmt->execute();
+
+  // If rejected, also remove from queue_list so they can book again
+  if ($action === 'reject') {
+    $deleteQueueQuery = "DELETE FROM queue_list WHERE student_id = :student_id";
+    $deleteQueueStmt = $db->prepare($deleteQueueQuery);
+    $deleteQueueStmt->bindParam(':student_id', $student_id);
+    $deleteQueueStmt->execute();
+  }
+
+  $db->commit();
 
   if ($updateStmt->rowCount() === 0) {
     echo json_encode(['success' => false, 'message' => 'Student not found or status unchanged.']);

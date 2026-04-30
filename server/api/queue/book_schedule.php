@@ -38,6 +38,28 @@ try {
         exit;
     }
 
+    // NEW: Check if schedule time has already passed
+    date_default_timezone_set('Asia/Manila');
+    $now = new DateTime();
+    $scheduleEnd = new DateTime($schedule['schedule_date'] . ' ' . $schedule['end_time']);
+
+    if ($now > $scheduleEnd) {
+        echo json_encode(['success' => false, 'message' => 'This schedule is already closed/expired']);
+        exit;
+    }
+
+    // NEW: Check if student is already validated
+    $checkStatusQuery = "SELECT status_id FROM students WHERE student_id = :sid LIMIT 1";
+    $csStmt = $db->prepare($checkStatusQuery);
+    $csStmt->bindParam(':sid', $student_id);
+    $csStmt->execute();
+    $studentStatus = $csStmt->fetchColumn();
+
+    if ($studentStatus == 1) { // 1 = Validated
+        echo json_encode(['success' => false, 'message' => 'You are already validated and do not need to book.']);
+        exit;
+    }
+
     // 2. Check if student already booked for this schedule
     $query = "SELECT * FROM queue_list WHERE student_id = :sid AND schedule_id = :schid LIMIT 1";
     $stmt = $db->prepare($query);

@@ -58,13 +58,9 @@ try {
 
 	// Build admin display name from JOIN (live from admin table)
 	if (!empty($student['admin_first_name']) || !empty($student['admin_last_name'])) {
-		$fullName = trim($student['admin_first_name'] . ' ' . $student['admin_last_name']);
-		$student['validated_by_display'] = $fullName . ' (' . $student['admin_id'] . ')';
-	} elseif (!empty($student['validated_by'])) {
-		// Fallback for legacy records that only stored the name string
-		$student['validated_by_display'] = $student['validated_by'];
-	} else {
-		$student['validated_by_display'] = null;
+		$student['validated_by'] = trim($student['admin_first_name'] . ' ' . $student['admin_last_name']);
+	} elseif (empty($student['validated_by'])) {
+		$student['validated_by'] = null;
 	}
 
 	// Format validated_at nicely

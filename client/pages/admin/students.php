@@ -236,14 +236,11 @@
 						<div id="details-id" style="font-size:0.82rem;color:rgba(255,255,255,0.75);margin-top:3px;"></div>
 					</div>
 				</div>
-				<!-- Validated badge in header -->
+				<!-- Validated badge in -->
 				<div style="margin-top:16px;">
-					<span
+					<span id="validated-by-badge"
 						style="display:inline-flex;align-items:center;gap:6px;background:rgba(34,197,94,0.2);border:1px solid rgba(34,197,94,0.4);color:#86efac;border-radius:20px;padding:4px 12px;font-size:0.78rem;font-weight:600;">
-						<svg width="11" height="11" fill="#86efac" viewBox="0 0 24 24">
-							<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
-						</svg>
-						VALIDATED
+						<!-- Admin name will be inserted here -->
 					</span>
 				</div>
 			</div>
@@ -550,6 +547,8 @@
 								? `<span style="color:#2563eb;font-weight:500;">${s.validated_at_formatted}</span>`
 								: null)
 						);
+						// Update admin name badge in header
+						$('#validated-by-badge').text(s.validated_by ? `Validated By: ${s.validated_by}` : '').css('display', s.validated_by ? 'inline-flex' : 'none');
 					},
 					error: function () { alert('Could not load student details.'); closeDetailsModal(); },
 					complete: function () { $detailsLoader.css('display', 'none'); }
