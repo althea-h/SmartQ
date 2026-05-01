@@ -153,8 +153,6 @@ $history = $q_stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
           </div>
         </div>
-
-        </div>
       </main>
       <div data-component="footer"></div>
     </div>
