@@ -75,7 +75,7 @@
   border-radius: var(--radius-lg);
   border: 1px solid rgba(0, 0, 0, 0.04);
   box-shadow: var(--shadow-sm);
-  overflow: hidden;
+  overflow-x: auto; /* Enable horizontal scroll */
 }
 
 .students-table {
@@ -86,21 +86,23 @@
 
 .students-table th {
   background: var(--bg-muted);
-  padding: var(--space-md) var(--space-lg);
-  font-size: var(--font-xs);
+  padding: 10px 14px;
+  font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-weight: 700;
   color: var(--text-muted);
   border-bottom: 2px solid rgba(0, 0, 0, 0.02);
+  white-space: nowrap;
 }
 
 .students-table td {
-  padding: var(--space-md) var(--space-lg);
-  font-size: var(--font-sm);
+  padding: 10px 14px;
+  font-size: 13px;
   color: var(--text-main);
   border-bottom: 1px solid rgba(0, 0, 0, 0.04);
   vertical-align: middle;
+  white-space: nowrap;
 }
 
 .students-table tr:last-child td {
@@ -119,6 +121,12 @@
 
 .student-name-cell {
   font-weight: 600;
+  min-width: 120px;
+}
+
+.email-cell {
+  min-width: 180px;
+  color: var(--text-muted);
 }
 
 /* ── Status Badges ─────────────────────────────────────────── */

@@ -1,8 +1,8 @@
 <?php
 session_start();
 if (!isset($_SESSION['admin'])) {
-    header('Location: ../login.php');
-    exit();
+  header('Location: ../login.php');
+  exit();
 }
 ?>
 <!DOCTYPE html>
@@ -21,7 +21,7 @@ if (!isset($_SESSION['admin'])) {
   <link rel="stylesheet" href="../../assets/css/components/components.css">
   <link rel="stylesheet" href="../../assets/css/admin/queue.css">
 
-  <title>SQ | Queue Management</title>
+  <title>SmartQ | Queue Management</title>
 </head>
 
 <body>
@@ -68,7 +68,8 @@ if (!isset($_SESSION['admin'])) {
               <h2><?= $showArchived ? 'Archived Schedules' : 'Active Schedules' ?></h2>
               <p>
                 <?= $showArchived ? 'Viewing historical data.' : 'You have ' . $activeCount . ' active validation schedule' . ($activeCount != 1 ? 's' : '') . ' currently.' ?>
-                <a href="?view=<?= $showArchived ? 'active' : 'archived' ?>" style="margin-left: 10px; font-size: 0.85rem; color: var(--primary);">
+                <a href="?view=<?= $showArchived ? 'active' : 'archived' ?>"
+                  style="margin-left: 10px; font-size: 0.85rem; color: var(--primary);">
                   <?= $showArchived ? 'View Active' : 'View Archive' ?>
                 </a>
               </p>
@@ -172,7 +173,7 @@ if (!isset($_SESSION['admin'])) {
                           </div>
                           <div class="schedule-actions" style="gap: 10px; flex-wrap: wrap;">
 '; ?>
-<?php
+                  <?php
                   if ($status === 'active') {
                     echo '<a href="manage-queue.php?id=' . $row['schedule_id'] . '" class="btn-manage" style="text-align: center; text-decoration: none; flex: 1; min-width: 100px;">Manage</a>
                                    <button class="btn-cancel-schedule" data-id="' . $row['schedule_id'] . '" style="background: #fee2e2; color: #ef4444; border: none; padding: 10px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; flex: 1; min-width: 100px;">Cancel</button>';
@@ -180,22 +181,22 @@ if (!isset($_SESSION['admin'])) {
                     echo '<div style="display: flex; flex-direction: column; width: 100%; gap: 10px;">
                                     <div style="display: flex; gap: 10px; width: 100%;">
                                       <a href="../../../server/api/events/download_report.php?id=' . $row['schedule_id'] . '" class="btn-download" style="background: #dcfce7; color: #16a34a; text-decoration: none; text-align: center; padding: 10px; border-radius: 8px; font-weight: 600; flex: 1;">Report</a>';
-                    
+
                     if (!$showArchived) {
-                        echo '<button class="btn-archive-schedule" data-id="' . $row['schedule_id'] . '" style="background: #f1f5f9; color: #64748b; border: none; padding: 10px; border-radius: 8px; font-weight: 600; cursor: pointer; flex: 1;">Archive</button>';
+                      echo '<button class="btn-archive-schedule" data-id="' . $row['schedule_id'] . '" style="background: #f1f5f9; color: #64748b; border: none; padding: 10px; border-radius: 8px; font-weight: 600; cursor: pointer; flex: 1;">Archive</button>';
                     }
-                    
+
                     echo '</div>';
-                    
+
                     if ($showArchived) {
-                        echo '<button disabled style="width: 100%; background: #f1f5f9; color: #94a3b8; border: none; padding: 10px; border-radius: 8px; font-weight: 600;">Archived</button>';
+                      echo '<button disabled style="width: 100%; background: #f1f5f9; color: #94a3b8; border: none; padding: 10px; border-radius: 8px; font-weight: 600;">Archived</button>';
                     } else {
-                        echo '<button disabled style="width: 100%; background: #f1f5f9; color: #94a3b8; border: none; padding: 10px; border-radius: 8px; font-weight: 600;">Schedule ' . ucfirst($status) . '</button>';
+                      echo '<button disabled style="width: 100%; background: #f1f5f9; color: #94a3b8; border: none; padding: 10px; border-radius: 8px; font-weight: 600;">Schedule ' . ucfirst($status) . '</button>';
                     }
-                    
+
                     echo '</div>';
                   }
-             
+
 
                   echo '</div>
                         </div>';
