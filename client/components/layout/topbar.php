@@ -33,40 +33,35 @@ function get_icon($filename)
 
 <header class="topbar" id="topbar">
 
-  <!-- Hamburger toggle for mobile -->
-  <button class="topbar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">
-    <span></span>
-    <span></span>
-    <span></span>
-  </button>
-
-  <!-- Page title -->
-  <div class="topbar-title-area">
+  <!-- Left: Title Area -->
+  <div class="topbar-content">
     <h1 class="topbar-title">
       <?= $title ?>
     </h1>
-    <p class="topbar-subtitle">
-      <?= $description ?>
-    </p>
+    <?php if ($description): ?>
+      <p class="topbar-subtitle">
+        <?= $description ?>
+      </p>
+    <?php endif; ?>
   </div>
 
-  <!-- Right-side actions -->
+  <!-- Right: Actions Area -->
   <div class="topbar-actions">
-    <!-- Search -->
-    <div class="topbar-search">
-      <input type="text" id="global-search" placeholder="Search…" autocomplete="off">
+    <!-- Search Bar -->
+    <div class="topbar-search-wrapper">
+      <i class="fas fa-search"></i>
+      <input type="text" id="global-search" placeholder="Search for anything..." autocomplete="off">
     </div>
 
-    <!-- Notifications -->
-    <button class="topbar-btn" id="notifications-btn" aria-label="Notifications">
-      <?php echo get_icon('notification.svg'); ?>
-      <span class="badge" id="notif-count">3</span>
-    </button>
-
-    <!-- User avatar -->
-    <div class="topbar-user" id="user-menu">
-      <span class="topbar-avatar"></span>
-      <span class="topbar-username">Admin</span>
+    <!-- User Profile -->
+    <div class="topbar-user-profile" id="user-menu">
+      <div class="topbar-avatar">
+        A
+      </div>
+      <div class="topbar-user-info">
+        <span class="topbar-username">Administrator</span>
+        <span class="topbar-user-role">Super Admin</span>
+      </div>
     </div>
   </div>
 
