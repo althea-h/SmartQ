@@ -33,16 +33,25 @@ function get_icon($filename)
 ?>
 
 <?php
-// Determine user session
 $admin_data = $_SESSION['admin'] ?? null;
 $student_data = $_SESSION['student'] ?? null;
+$current_path = $_SERVER['PHP_SELF'];
+$referer = $_SERVER['HTTP_REFERER'] ?? '';
 
 $full_name = 'User';
 $initial = 'U';
 $avatar_url = null;
 $user_role = 'Guest';
 
-if ($admin_data) {
+// Prioritize student data if on a student page (check path or referer)
+$is_student_page = (strpos($current_path, '/users/') !== false || strpos($referer, '/users/') !== false);
+
+if ($is_student_page && $student_data) {
+  $full_name = $student_data['first_name'] . ' ' . $student_data['last_name'];
+  $initial = strtoupper(substr($student_data['first_name'], 0, 1));
+  $avatar_url = $student_data['profile_image'] ?? null;
+  $user_role = 'Student';
+} elseif ($admin_data) {
   $full_name = $admin_data['first_name'] . ' ' . $admin_data['last_name'];
   $initial = strtoupper(substr($admin_data['first_name'], 0, 1));
   $avatar_url = $admin_data['profile_image'] ?? null;
@@ -109,14 +118,25 @@ if ($admin_data) {
 
 <script>
   $(document).ready(function () {
-    const services = [
-      { name: 'Dashboard', url: 'dashboard.php', icon: `<?= get_icon('dashboard.svg') ?>`, desc: 'System overview and statistics' },
-      { name: 'Student Directory', url: 'students.php', icon: `<?= get_icon('students.svg') ?>`, desc: 'Manage students and ID validation' },
-      { name: 'Manage Queue', url: 'manage-queue.php', icon: `<?= get_icon('queue.svg') ?>`, desc: 'View and handle active queue slots' },
-      { name: 'Schedules', url: 'queue.php', icon: `<?= get_icon('queue.svg') ?>`, desc: 'Create and manage validation dates' },
-      { name: 'Reports & Analytics', url: 'reports.php', icon: `<?= get_icon('reports.svg') ?>`, desc: 'View validation and queue data' },
-      { name: 'Profile Settings', url: 'profile.php', icon: `<?= get_icon('profile.svg') ?>`, desc: 'Update your account info' },
-    ];
+    const userRole = `<?= $user_role ?>`;
+    let services = [];
+
+    if (userRole === 'Super Admin') {
+      services = [
+        { name: 'Dashboard', url: 'dashboard.php', icon: `<?= get_icon('dashboard.svg') ?>`, desc: 'System overview and statistics' },
+        { name: 'Student Directory', url: 'students.php', icon: `<?= get_icon('students.svg') ?>`, desc: 'Manage students and ID validation' },
+        { name: 'Manage Queue', url: 'manage-queue.php', icon: `<?= get_icon('queue.svg') ?>`, desc: 'View and handle active queue slots' },
+        { name: 'Schedules', url: 'queue.php', icon: `<?= get_icon('queue.svg') ?>`, desc: 'Create and manage validation dates' },
+        { name: 'Reports & Analytics', url: 'reports.php', icon: `<?= get_icon('reports.svg') ?>`, desc: 'View validation and queue data' },
+        { name: 'Profile Settings', url: 'profile.php', icon: `<?= get_icon('profile.svg') ?>`, desc: 'Update your account info' },
+      ];
+    } else {
+      services = [
+        { name: 'Student Dashboard', url: 'student-dashboard.php', icon: `<?= get_icon('dashboard.svg') ?>`, desc: 'View your queue status and validation info' },
+        { name: 'Book Validation', url: 'book-queue.php', icon: `<?= get_icon('queue.svg') ?>`, desc: 'Schedule a validation appointment' },
+        { name: 'My Profile', url: 'profile.php', icon: `<?= get_icon('profile.svg') ?>`, desc: 'Update your personal details' },
+      ];
+    }
 
     const $search = $('#global-search');
     const $results = $('#search-results');

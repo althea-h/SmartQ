@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $db = $database->getConnection();
 
         // 1. Try checking Admin table (STRICT: email only for admin)
-        $query = "SELECT amdin_id as id, first_name, last_name, email, admin_pass as password FROM admin 
+        $query = "SELECT amdin_id as id, first_name, last_name, email, profile_image, admin_pass as password FROM admin 
                   WHERE email = :input OR amdin_id = :input LIMIT 1";
         $stmt = $db->prepare($query);
         $stmt->bindParam(':input', $login_input);
@@ -26,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         // 2. If not found in Admin, try Students table (Check email OR student_id)
         if (!$user) {
-            $query = "SELECT student_id, first_name, last_name, email, student_pass as password, status_id, college_id, yearlvl FROM students 
+            $query = "SELECT student_id, first_name, last_name, email, profile_image, student_pass as password, status_id, college_id, yearlvl FROM students 
                       WHERE email = :input OR student_id = :input LIMIT 1";
             $stmt = $db->prepare($query);
             $stmt->bindParam(':input', $login_input);
@@ -43,6 +43,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             if ($is_plain || $is_hashed) {
                 // Remove password from the array before storing in session for security
                 unset($user['password']);
+
+                // Clear previous session data to prevent role conflicts
+                session_unset();
 
                 if ($role === 'admin') {
                     $_SESSION['admin'] = $user;
