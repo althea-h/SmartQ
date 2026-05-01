@@ -152,11 +152,11 @@
           <!-- Team Member 1 -->
           <div class="team-card">
             <div class="team-img-large">
-              <img src="assets/img/Jerusalem, Wenox.png" alt="Owen Jerusalem">
+              <img src="assets/img/althea.jpg" alt="Althea Hassel Daing">
             </div>
             <div class="team-info">
-              <h4>Owen Jerusalem</h4>
-              <span class="role">Project Lead / Developer</span>
+              <h4>Althea Hassel Daing</h4>
+              <span class="role">UI/UX Designer</span>
               <p class="description">Contributes creative assets and handles core system development with consistent
                 attention to detail.</p>
               <div class="team-socials">
@@ -167,14 +167,14 @@
             </div>
           </div>
 
-          <!-- Team Member 1 -->
+          <!-- Team Member 2 -->
           <div class="team-card">
             <div class="team-img-large">
-              <img src="assets/img/Jerusalem, Wenox.png" alt="Owen Jerusalem">
+              <img src="assets/img/bernbern.jpg" alt="Owen Jerusalem">
             </div>
             <div class="team-info">
-              <h4>Owen Jerusalem</h4>
-              <span class="role">Project Lead / Developer</span>
+              <h4>Alejandra Bernasol</h4>
+              <span class="role">System Analyst</span>
               <p class="description">Contributes creative assets and handles core system development with consistent
                 attention to detail.</p>
               <div class="team-socials">
@@ -185,14 +185,14 @@
             </div>
           </div>
 
-          <!-- Team Member 1 -->
+          <!-- Team Member 3 -->
           <div class="team-card">
             <div class="team-img-large">
-              <img src="assets/img/Jerusalem, Wenox.png" alt="Owen Jerusalem">
+              <img src="assets/img/ged.jpg" alt="Ged Shareef Diayon">
             </div>
             <div class="team-info">
-              <h4>Owen Jerusalem</h4>
-              <span class="role">Project Lead / Developer</span>
+              <h4>Ged Shareef Diayon</h4>
+              <span class="role">Hustler</span>
               <p class="description">Contributes creative assets and handles core system development with consistent
                 attention to detail.</p>
               <div class="team-socials">
@@ -203,10 +203,10 @@
             </div>
           </div>
 
-          <!-- Team Member 1 -->
+          <!-- Team Member 4 -->
           <div class="team-card">
             <div class="team-img-large">
-              <img src="assets/img/Jerusalem, Wenox.png" alt="Owen Jerusalem">
+              <img src="assets/img/wen.jpg" alt="Owen Jerusalem">
             </div>
             <div class="team-info">
               <h4>Owen Jerusalem</h4>

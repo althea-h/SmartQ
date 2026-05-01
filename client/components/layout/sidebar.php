@@ -63,9 +63,9 @@ function sidebar_icon($filename)
           </a>
         </li>
         <li>
-          <a href="settings.php" class="sidebar-link <?= $active === 'settings' ? 'active' : '' ?>">
-            <?= sidebar_icon('settings.svg') ?>
-            <span class="sidebar-label">Settings</span>
+          <a href="profile.php" class="sidebar-link <?= $active === 'profile' ? 'active' : '' ?>">
+            <?= sidebar_icon('profile.svg') ?>
+            <span class="sidebar-label">Profile</span>
           </a>
         </li>
 
@@ -84,7 +84,7 @@ function sidebar_icon($filename)
         </li>
         <li>
           <a href="profile.php" class="sidebar-link <?= $active === 'profile' ? 'active' : '' ?>">
-            <?= sidebar_icon('settings.svg') ?>
+            <?= sidebar_icon('profile.svg') ?>
             <span class="sidebar-label">Profile</span>
           </a>
         </li>

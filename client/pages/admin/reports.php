@@ -19,9 +19,8 @@ if (!isset($_SESSION['admin'])) {
   <!-- Stylesheets -->
   <link rel="stylesheet" href="../../assets/css/main.css">
   <link rel="stylesheet" href="../../assets/css/components/components.css">
-  <link rel="stylesheet" href="../../assets/css/admin/reports.css">
 
-  <title>SQ | Queue</title>
+  <title>SmartQ | Reports</title>
 </head>
 
 <body>

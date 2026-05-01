@@ -3,22 +3,34 @@
  * Colleges List Widget
  * 
  * Usage:  <div data-component="colleges"></div>
- * 
- * Displays a list of colleges with their total student count.
- * In production, this data would come from the database.
  */
 
-// Static sample data (replace with DB query later)
-$colleges = [
-  ['name' => 'College of Technologies', 'abbr' => 'COT', 'students' => 30, 'color' => '#ff7d04ff'],
-  ['name' => 'College of Nursing', 'abbr' => 'CON', 'students' => 65, 'color' => '#ec57eeff'],
-  ['name' => 'College of Business', 'abbr' => 'COB', 'students' => 50, 'color' => '#fac800ff'],
-  ['name' => 'College of Education', 'abbr' => 'COE', 'students' => 35, 'color' => '#1c5adf'],
-  ['name' => 'College of Public Administrarion and Governance', 'abbr' => 'CPAG', 'students' => 35, 'color' => '#23c7c7ff'],
-  ['name' => 'College of Arts & Sciences', 'abbr' => 'CAS', 'students' => 10, 'color' => '#10b981'],
+require_once '../../../server/config/database.php';
+$database = new Database();
+$db = $database->getConnection();
+
+// Fetch Real College Data
+$query = "SELECT c.college_name as name, COUNT(s.student_id) as students
+          FROM colleges c
+          LEFT JOIN students s ON c.college_id = s.college_id
+          GROUP BY c.college_id
+          ORDER BY students DESC";
+
+$stmt = $db->query($query);
+$colleges = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Color Map (matches students.php)
+$college_colors = [
+    'COT'  => '#ff7d04',
+    'CON'  => '#ec57ee',
+    'COB'  => '#fac800',
+    'COE'  => '#1c5adf',
+    'CPAG' => '#23c7c7',
+    'CAS'  => '#10b981',
 ];
 
-$maxStudents = max(array_column($colleges, 'students'));
+$maxStudents = (count($colleges) > 0) ? max(array_column($colleges, 'students')) : 0;
+if ($maxStudents == 0) $maxStudents = 1;
 ?>
 
 <div class="colleges-card">
@@ -28,19 +40,23 @@ $maxStudents = max(array_column($colleges, 'students'));
   </div>
   <ul class="colleges-items" id="colleges-list">
     <?php foreach ($colleges as $college): ?>
-      <?php $pct = round(($college['students'] / $maxStudents) * 100); ?>
+      <?php 
+        $abbr = $college['name']; // In this system, name often holds the abbr like 'COT'
+        $color = $college_colors[$abbr] ?? '#3b82f6';
+        $pct = round(($college['students'] / $maxStudents) * 100); 
+      ?>
       <li class="college-item">
 
         <div class="college-info">
-          <span class="college-badge" style="background:<?= $college['color'] ?>1a; color:<?= $college['color'] ?>">
-            <?= $college['abbr'] ?>
+          <span class="college-badge" style="background:<?= $color ?>26; color:<?= $color ?>">
+            <?= htmlspecialchars($abbr) ?>
           </span>
           <span class="college-name"><?= htmlspecialchars($college['name']) ?></span>
         </div>
 
         <div class="college-stats">
           <div class="college-bar-track">
-            <div class="college-bar-fill" style="width:<?= $pct ?>%; background:<?= $college['color'] ?>"></div>
+            <div class="college-bar-fill" style="width:<?= $pct ?>%; background:<?= $color ?>"></div>
           </div>
           <span class="college-count"><?= $college['students'] ?></span>
         </div>
@@ -48,4 +64,4 @@ $maxStudents = max(array_column($colleges, 'students'));
       </li>
     <?php endforeach; ?>
   </ul>
-</div>
+</div>

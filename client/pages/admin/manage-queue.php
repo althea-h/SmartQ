@@ -142,7 +142,19 @@ if (!isset($_SESSION['admin'])) {
                         <td class="student-id-cell"><?= htmlspecialchars($row['student_id']) ?></td>
                         <td class="student-name-cell"><?= htmlspecialchars($row['first_name'] . ' ' . $row['last_name']) ?>
                         </td>
-                        <td><span class="college-badge-small"><?= htmlspecialchars($row['college_name'] ?? 'N/A') ?></span>
+                        <?php 
+                          $college_abbr = $row['college_name'] ?? 'N/A';
+                          $college_colors = [
+                            'COT' => ['bg' => '#fff7ed', 'text' => '#ff7d04'],
+                            'CON' => ['bg' => '#fdf2f8', 'text' => '#ec57ee'],
+                            'COB' => ['bg' => '#fffbeb', 'text' => '#fac800'],
+                            'COE' => ['bg' => '#eff6ff', 'text' => '#1c5adf'],
+                            'CPAG' => ['bg' => '#f0fdfa', 'text' => '#23c7c7'],
+                            'CAS' => ['bg' => '#f0fdf4', 'text' => '#10b981'],
+                          ];
+                          $colors = $college_colors[$college_abbr] ?? ['bg' => '#f1f5f9', 'text' => '#64748b'];
+                        ?>
+                        <td><span class="college-badge-small" style="background:<?= $colors['bg'] ?>; color:<?= $colors['text'] ?>; border-color:<?= $colors['text'] ?>20;"><?= htmlspecialchars($college_abbr) ?></span>
                         </td>
                         <td><span
                             class="status-badge badge-<?= $status_class ?>"><?= htmlspecialchars($row['status_name'] ?? 'Pending') ?></span>

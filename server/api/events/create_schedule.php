@@ -32,10 +32,10 @@ try {
     // In this case, we'll just set it to start_time
     $opening_time = $start_time;
 
-    $admin_id = $_SESSION['user_id'] ?? null;
+    $admin_id = $_SESSION['admin_id'] ?? null;
 
-    $query = "INSERT INTO queue_schedule (schedule_id, schedule_date, opening_time, start_time, end_time, slot_limit, created_by) 
-              VALUES (:id, :date, :opening, :start, :end, :limit, :creator)";
+    $query = "INSERT INTO queue_schedule (schedule_id, schedule_date, opening_time, start_time, end_time, slot_limit, created_by, status) 
+              VALUES (:id, :date, :opening, :start, :end, :limit, :creator, 'active')";
     
     $stmt = $db->prepare($query);
     $stmt->bindParam(':id', $schedule_id);

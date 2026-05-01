@@ -1,8 +1,8 @@
 <?php
 session_start();
 if (!isset($_SESSION['admin'])) {
-    header('Location: ../login.php');
-    exit();
+	header('Location: ../login.php');
+	exit();
 }
 ?>
 <!DOCTYPE html>
@@ -125,7 +125,18 @@ if (!isset($_SESSION['admin'])) {
 										$display_year = isset($year_labels[$year_val]) ? $year_labels[$year_val] : ($year_val != 'N/A' ? $year_val . 'th Year' : 'N/A');
 
 										echo "<td class='year-cell'><span class='year-badge-small'>" . htmlspecialchars($display_year) . "</span></td>";
-										echo "<td class='college-cell'><span class='college-badge-small'>" . htmlspecialchars($row['college_name'] ?? 'N/A') . "</span></td>";
+										$college_abbr = $row['college_name'] ?? 'N/A';
+										$college_colors = [
+											'COT' => ['bg' => '#fff7ed', 'text' => '#ff7d04'],
+											'CON' => ['bg' => '#fdf2f8', 'text' => '#ec57ee'],
+											'COB' => ['bg' => '#fffbeb', 'text' => '#fac800'],
+											'COE' => ['bg' => '#eff6ff', 'text' => '#1c5adf'],
+											'CPAG' => ['bg' => '#f0fdfa', 'text' => '#23c7c7'],
+											'CAS' => ['bg' => '#f0fdf4', 'text' => '#10b981'],
+										];
+										$colors = $college_colors[$college_abbr] ?? ['bg' => '#f1f5f9', 'text' => '#64748b'];
+
+										echo "<td class='college-cell'><span class='college-badge-small' style='background:{$colors['bg']}; color:{$colors['text']}; border-color:{$colors['text']}20;'>" . htmlspecialchars($college_abbr) . "</span></td>";
 										echo "<td class='status-cell'><span class='status-badge badge-" . $status_class . "'>" . htmlspecialchars($row['status_name'] ?? 'Pending') . "</span></td>";
 										echo "<td>
                             <div class='action-buttons' style='justify-content: flex-end;'>";
@@ -181,136 +192,60 @@ if (!isset($_SESSION['admin'])) {
 		</div>
 	</div>
 
-	<!-- ── Confirmation Modal ── -->
-	<div id="status-modal"
-		style="display:none; position:fixed; inset:0; z-index:9999; align-items:center; justify-content:center;">
-		<!-- Backdrop -->
-		<div id="modal-backdrop"
-			style="position:absolute; inset:0; background:rgba(0,0,0,0.45); backdrop-filter:blur(3px);"></div>
-		<!-- Card -->
-		<div
-			style="position:relative; background:var(--surface,#fff); border-radius:14px; padding:36px 32px; max-width:420px; width:90%; box-shadow:0 20px 60px rgba(0,0,0,0.25); text-align:center;">
-			<div id="modal-icon"
-				style="width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;">
-				<!-- icon injected by JS -->
-			</div>
-			<h3 id="modal-title" style="margin:0 0 10px; font-size:1.2rem; color:var(--text-primary,#111);"></h3>
-			<p id="modal-desc" style="margin:0 0 28px; font-size:0.9rem; color:var(--text-muted,#666); line-height:1.55;"></p>
-			<div style="display:flex; gap:12px; justify-content:center;">
-				<button id="modal-cancel-btn"
-					style="flex:1; padding:10px 0; border-radius:8px; border:1px solid var(--border,#ddd); background:transparent; color:var(--text-primary,#333); font-size:0.9rem; cursor:pointer;">Cancel</button>
-				<button id="modal-confirm-btn"
-					style="flex:1; padding:10px 0; border-radius:8px; border:none; color:#fff; font-size:0.9rem; font-weight:600; cursor:pointer;">Confirm</button>
+	<!-- ── Action Confirmation Modal ── -->
+	<div id="action-modal" class="modal-overlay">
+		<div id="modal-backdrop" class="modal-backdrop"></div>
+		<div class="modal-card">
+			<div id="modal-icon" class="modal-icon-wrapper"></div>
+			<h3 id="modal-title" class="modal-title-text"></h3>
+			<p id="modal-desc" class="modal-desc-text"></p>
+			<div class="modal-action-row">
+				<button id="modal-cancel-btn" class="btn-modal-cancel">Cancel</button>
+				<button id="modal-confirm-btn" class="btn-modal-confirm">Confirm</button>
 			</div>
 		</div>
 	</div>
 
 	<!-- ── Student Details Modal ── -->
-	<div id="details-modal"
-		style="display:none; position:fixed; inset:0; z-index:9998; align-items:center; justify-content:center;">
-		<div id="details-backdrop"
-			style="position:absolute; inset:0; background:rgba(0,0,0,0.5); backdrop-filter:blur(4px);"></div>
-		<div id="details-card" style="
-			position:relative; background:var(--surface,#fff); border-radius:16px;
-			width:min(520px, 94vw);
-			box-shadow:0 24px 80px rgba(0,0,0,0.28);
-			display:flex; flex-direction:column;
-		">
-			<!-- Header bar -->
-			<div
-				style="background:linear-gradient(135deg,#2563eb 0%,#1e40af 100%); padding:28px 28px 24px; border-radius:16px 16px 0 0; position:relative;">
-				<button id="details-close-btn" style="
-					position:absolute; top:16px; right:16px;
-					background:rgba(255,255,255,0.15); border:none; border-radius:50%;
-					width:32px; height:32px; cursor:pointer; color:#fff;
-					display:flex; align-items:center; justify-content:center;
-				">
-					<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-						<line x1="18" y1="6" x2="6" y2="18"></line>
-						<line x1="6" y1="6" x2="18" y2="18"></line>
-					</svg>
+	<div id="details-modal" class="modal-overlay">
+		<div id="details-backdrop" class="modal-backdrop"></div>
+		<div class="details-card">
+			<div class="details-header">
+				<button id="details-close-btn" class="details-close">
+					<i class="fas fa-times"></i>
 				</button>
-				<div style="display:flex; align-items:center; gap:16px;">
-					<div
-						style="width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-						<svg width="26" height="26" fill="none" stroke="#fff" stroke-width="1.8" viewBox="0 0 24 24">
-							<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-							<circle cx="12" cy="7" r="4"></circle>
-						</svg>
+				<div class="details-user-info">
+					<div class="details-avatar">
+						<i class="fas fa-user"></i>
 					</div>
 					<div>
-						<div id="details-name" style="font-size:1.2rem;font-weight:700;color:#fff;letter-spacing:0.01em;"></div>
-						<div id="details-id" style="font-size:0.82rem;color:rgba(255,255,255,0.75);margin-top:3px;"></div>
+						<div id="details-name" class="details-name-text"></div>
+						<div id="details-id" class="details-id-text"></div>
 					</div>
 				</div>
-				<!-- Validated badge in -->
-				<div style="margin-top:16px;">
-					<span id="validated-by-badge"
-						style="display:inline-flex;align-items:center;gap:6px;background:rgba(34,197,94,0.2);border:1px solid rgba(34,197,94,0.4);color:#86efac;border-radius:20px;padding:4px 12px;font-size:0.78rem;font-weight:600;">
-						<!-- Admin name will be inserted here -->
+				<div class="details-badge-container">
+					<span id="validated-by-badge" class="validated-badge">
 					</span>
 				</div>
 			</div>
 
-			<!-- Body -->
-			<div style="padding:24px 28px 28px; display:flex; flex-direction:column; gap:0;">
-
-				<!-- Section: Student Info -->
-				<p
-					style="font-size:0.7rem;font-weight:700;color:var(--text-muted,#888);text-transform:uppercase;letter-spacing:0.08em;margin:0 0 12px;">
-					Student Information</p>
-				<div id="details-info-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;">
+			<div class="details-body">
+				<p class="detail-section-label">Student Information</p>
+				<div id="details-info-grid" class="details-grid">
 				</div>
 
-				<hr style="border:none;border-top:1px solid var(--border,#f0f0f0);margin:0 0 20px;">
+				<hr class="details-divider">
 
-				<!-- Section: Validation Details -->
-				<p
-					style="font-size:0.7rem;font-weight:700;color:var(--text-muted,#888);text-transform:uppercase;letter-spacing:0.08em;margin:0 0 12px;">
-					Validation Details</p>
-				<div id="details-val-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;"></div>
+				<p class="detail-section-label">Validation Details</p>
+				<div id="details-val-grid" class="details-grid"></div>
 			</div>
 
-			<!-- Loading overlay -->
-			<div id="details-loader"
-				style="display:none;position:absolute;inset:0;background:var(--surface,#fff);border-radius:16px;align-items:center;justify-content:center;">
-				<div
-					style="width:36px;height:36px;border:3px solid #e2e8f0;border-top-color:#2563eb;border-radius:50%;animation:spin 0.7s linear infinite;">
-				</div>
+			<div id="details-loader" class="details-loader-overlay">
+				<div class="spinner-small details-spinner"></div>
 			</div>
 		</div>
 	</div>
 
-	<style>
-		@keyframes spin {
-			to {
-				transform: rotate(360deg);
-			}
-		}
-
-		.detail-field {
-			background: var(--surface-alt, #f8fafc);
-			border: 1px solid var(--border, #f0f0f0);
-			border-radius: 10px;
-			padding: 10px 14px;
-		}
-
-		.detail-field-label {
-			font-size: 0.7rem;
-			font-weight: 600;
-			color: var(--text-muted, #9ca3af);
-			text-transform: uppercase;
-			letter-spacing: 0.06em;
-			margin-bottom: 4px;
-		}
-
-		.detail-field-value {
-			font-size: 0.88rem;
-			font-weight: 500;
-			color: var(--text-primary, #1e293b);
-			word-break: break-word;
-		}
-	</style>
 
 	<!-- Scripts -->
 	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -361,7 +296,7 @@ if (!isset($_SESSION['admin'])) {
 			$('.filter-select').on('change', filterTable);
 
 			// ── Validation Status Modal ──────────────────────────────────────
-			const $modal = $('#status-modal');
+			const $modal = $('#action-modal');
 			const $modalIcon = $('#modal-icon');
 			const $modalTitle = $('#modal-title');
 			const $modalDesc = $('#modal-desc');
