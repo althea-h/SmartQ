@@ -47,6 +47,9 @@ try {
     $stmt->bindParam(':creator', $admin_id);
 
     if ($stmt->execute()) {
+        // Increment active_schedules count
+        $db->exec("UPDATE system_stats SET stat_value = stat_value + 1 WHERE stat_key = 'active_schedules'");
+        
         echo json_encode(['success' => true, 'message' => 'Schedule created successfully']);
     } else {
         echo json_encode(['success' => false, 'message' => 'Failed to create schedule']);

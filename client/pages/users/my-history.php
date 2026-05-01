@@ -57,48 +57,30 @@ $history = $q_stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="student-container">
           
           <!-- ── Current Status Card ── -->
-          <div class="student-card" style="margin-bottom: 30px;">
-            <h3 style="margin-top: 0; color: #1e293b;">Validation Summary</h3>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
-              <div>
-                <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 5px;">Current Status</p>
-                <?php
-                $status_class = 'not-validated';
-                if ($student_data['status_name'] == 'Validated') $status_class = 'validated';
-                if ($student_data['status_name'] == 'Pending Review') $status_class = 'pending';
-                ?>
-                <div class="status-pill <?php echo $status_class; ?>" style="display: inline-block;">
-                  <?php echo htmlspecialchars($student_data['status_name'] ?? 'Not Validated'); ?>
-                </div>
-              </div>
-              <div>
-                <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 5px;">Last Updated</p>
-                <p style="font-weight: 600; color: #1e293b;">
-                  <?php echo $student_data['validated_at'] ? date('F j, Y g:i A', strtotime($student_data['validated_at'])) : 'Never'; ?>
-                </p>
-              </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px;">
+              <div data-component="stat-card" data-props='{"label":"Current Status", "value":"<?php echo htmlspecialchars($student_data['status_name'] ?? 'Not Validated'); ?>", "trend": "<?php echo $student_data['status_id'] == 1 ? 'up' : 'flat'; ?>"}'></div>
+              <div data-component="stat-card" data-props='{"label":"Validation Date", "value":"<?php echo $student_data['validated_at'] ? date('M d, Y', strtotime($student_data['validated_at'])) : 'Pending'; ?>", "trend": "flat"}'></div>
               <?php if($student_data['validated_by']): ?>
-              <div>
-                <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 5px;">Validated By</p>
-                <p style="font-weight: 600; color: #1e293b;"><?php echo htmlspecialchars($student_data['validated_by']); ?></p>
-              </div>
+                <div data-component="stat-card" data-props='{"label":"Validated By", "value":"<?php echo htmlspecialchars($student_data['validated_by']); ?>", "trend": "flat"}'></div>
               <?php endif; ?>
-            </div>
           </div>
 
           <!-- ── Queue History ── -->
-          <div class="student-card">
-            <h3 style="margin-top: 0; color: #1e293b;">Queue History</h3>
-            <div style="margin-top: 20px;">
+          <div class="student-card" style="padding: 0; overflow: hidden; border: 1px solid #e2e8f0;">
+            <div style="padding: 20px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="margin: 0; color: #1e293b; font-size: 1.1rem; font-weight: 700;">Queue History</h3>
+                <span style="font-size: 0.8rem; color: #64748b; font-weight: 500;"><?php echo count($history); ?> total entries</span>
+            </div>
+            <div style="padding: 0;">
               <?php if (count($history) > 0): ?>
                 <div style="overflow-x: auto;">
                   <table style="width: 100%; border-collapse: collapse; text-align: left;">
                     <thead>
-                      <tr style="border-bottom: 2px solid #f1f5f9;">
-                        <th style="padding: 12px; color: #64748b; font-weight: 600;">Date</th>
-                        <th style="padding: 12px; color: #64748b; font-weight: 600;">Time Slot</th>
-                        <th style="padding: 12px; color: #64748b; font-weight: 600;">Queue No.</th>
-                        <th style="padding: 12px; color: #64748b; font-weight: 600;">Status</th>
+                      <tr style="background: #f8fafc;">
+                        <th style="padding: 15px 20px; color: #64748b; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">Date</th>
+                        <th style="padding: 15px 20px; color: #64748b; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">Time Slot</th>
+                        <th style="padding: 15px 20px; color: #64748b; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">Queue No.</th>
+                        <th style="padding: 15px 20px; color: #64748b; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; text-align: right;">Status</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -107,12 +89,17 @@ $history = $q_stmt->fetchAll(PDO::FETCH_ASSOC);
                         $start = new DateTime($row['start_time']);
                         $end = new DateTime($row['end_time']);
                       ?>
-                        <tr style="border-bottom: 1px solid #f1f5f9;">
-                          <td style="padding: 12px; font-weight: 500;"><?php echo $date->format('M d, Y'); ?></td>
-                          <td style="padding: 12px;"><?php echo $start->format('h:i A') . ' - ' . $end->format('h:i A'); ?></td>
-                          <td style="padding: 12px; font-weight: 700; color: var(--student-primary);"><?php echo $row['queue_number']; ?></td>
-                          <td style="padding: 12px;">
-                            <span style="font-size: 0.85rem; font-weight: 600; padding: 4px 10px; border-radius: 99px; background: <?php echo $row['schedule_status'] == 'active' ? '#dcfce7; color: #16a34a;' : '#f1f5f9; color: #64748b;'; ?>">
+                        <tr style="border-bottom: 1px solid #f1f5f9; transition: background 0.2s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
+                          <td style="padding: 15px 20px;">
+                             <div style="font-weight: 600; color: #1e293b;"><?php echo $date->format('M d, Y'); ?></div>
+                             <div style="font-size: 0.75rem; color: #94a3b8;"><?php echo $date->format('l'); ?></div>
+                          </td>
+                          <td style="padding: 15px 20px; color: #475569; font-size: 0.9rem;"><?php echo $start->format('h:i A') . ' - ' . $end->format('h:i A'); ?></td>
+                          <td style="padding: 15px 20px;">
+                             <span style="font-weight: 800; color: var(--student-primary); background: rgba(59, 130, 246, 0.1); padding: 4px 8px; border-radius: 6px;">#<?php echo str_pad($row['queue_number'], 3, '0', STR_PAD_LEFT); ?></span>
+                          </td>
+                          <td style="padding: 15px 20px; text-align: right;">
+                            <span class="status-pill <?php echo $row['schedule_status'] == 'active' ? 'validated' : 'not-validated'; ?>" style="font-size: 0.7rem; padding: 4px 10px;">
                               <?php echo ucfirst($row['schedule_status']); ?>
                             </span>
                           </td>
@@ -122,12 +109,14 @@ $history = $q_stmt->fetchAll(PDO::FETCH_ASSOC);
                   </table>
                 </div>
               <?php else: ?>
-                <div style="text-align: center; padding: 40px 0;">
-                  <p style="color: #64748b;">No queue history found.</p>
+                <div style="text-align: center; padding: 60px 20px;">
+                  <div style="font-size: 3rem; margin-bottom: 15px;">📜</div>
+                  <p style="color: #64748b; font-weight: 500;">No queue history found for your account.</p>
                 </div>
               <?php endif; ?>
             </div>
           </div>
+        </div>
 
         </div>
       </main>

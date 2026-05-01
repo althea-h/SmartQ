@@ -157,8 +157,7 @@
             <div class="team-info">
               <h4>Althea Hassel Daing</h4>
               <span class="role">UI/UX Designer</span>
-              <p class="description">Contributes creative assets and handles core system development with consistent
-                attention to detail.</p>
+              <p class="description">Designs clean, user‑friendly interfaces with a focus on detail.</p>
               <div class="team-socials">
                 <div class="social-dot"></div>
                 <div class="social-dot"></div>
@@ -175,8 +174,7 @@
             <div class="team-info">
               <h4>Alejandra Bernasol</h4>
               <span class="role">System Analyst</span>
-              <p class="description">Contributes creative assets and handles core system development with consistent
-                attention to detail.</p>
+              <p class="description">Analyzes systems and ensures efficient workflow design. </p>
               <div class="team-socials">
                 <div class="social-dot"></div>
                 <div class="social-dot"></div>
@@ -193,8 +191,7 @@
             <div class="team-info">
               <h4>Ged Shareef Diayon</h4>
               <span class="role">Hustler</span>
-              <p class="description">Contributes creative assets and handles core system development with consistent
-                attention to detail.</p>
+              <p class="description">Drives project success through strong teamwork and effective coordination.</p>
               <div class="team-socials">
                 <div class="social-dot"></div>
                 <div class="social-dot"></div>
@@ -211,8 +208,7 @@
             <div class="team-info">
               <h4>Owen Jerusalem</h4>
               <span class="role">Project Lead / Developer</span>
-              <p class="description">Contributes creative assets and handles core system development with consistent
-                attention to detail.</p>
+              <p class="description">Leads development with clean, efficient code and ensures system reliability.</p>
               <div class="team-socials">
                 <div class="social-dot"></div>
                 <div class="social-dot"></div>

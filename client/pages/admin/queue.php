@@ -45,15 +45,17 @@ if (!isset($_SESSION['admin'])) {
         <div class="queue-container">
 
           <?php
-          // Count active schedules
-          $activeCount = $db->query("SELECT COUNT(*) FROM queue_schedule WHERE status = 'active'")->fetchColumn() ?: 0;
+          $showArchived = isset($_GET['view']) && $_GET['view'] === 'archived';
 
-          // Total slots
-          $totalSlots = $db->query("SELECT SUM(slot_limit) AS total_slots FROM queue_schedule")
+          // Count active schedules (excluding archived/deleted)
+          $activeCount = $db->query("SELECT COUNT(*) FROM queue_schedule WHERE status = 'active' AND deleted_at IS NULL")->fetchColumn() ?: 0;
+
+          // Total slots (active/closed only)
+          $totalSlots = $db->query("SELECT SUM(slot_limit) AS total_slots FROM queue_schedule WHERE deleted_at IS NULL")
             ->fetch(PDO::FETCH_ASSOC)['total_slots'] ?? 0;
 
-          // Students booked
-          $studentsBooked = $db->query("SELECT COUNT(student_id) AS students_booked FROM queue_list")
+          // Students booked (active/closed only)
+          $studentsBooked = $db->query("SELECT COUNT(student_id) AS students_booked FROM queue_list WHERE deleted_at IS NULL")
             ->fetch(PDO::FETCH_ASSOC)['students_booked'] ?? 0;
 
           // Remaining
@@ -63,8 +65,12 @@ if (!isset($_SESSION['admin'])) {
           <!-- ── Header ── -->
           <header class="queue-header">
             <div class="queue-title">
-              <h2>Active Schedules</h2>
-              <p>You have <?= $activeCount ?> active validation schedule<?= $activeCount != 1 ? 's' : '' ?> currently.
+              <h2><?= $showArchived ? 'Archived Schedules' : 'Active Schedules' ?></h2>
+              <p>
+                <?= $showArchived ? 'Viewing historical data.' : 'You have ' . $activeCount . ' active validation schedule' . ($activeCount != 1 ? 's' : '') . ' currently.' ?>
+                <a href="?view=<?= $showArchived ? 'active' : 'archived' ?>" style="margin-left: 10px; font-size: 0.85rem; color: var(--primary);">
+                  <?= $showArchived ? 'View Active' : 'View Archive' ?>
+                </a>
               </p>
             </div>
             <button class="btn-add-schedule" id="openModal">
@@ -82,12 +88,15 @@ if (!isset($_SESSION['admin'])) {
           <!-- ── Schedule Grid ── -->
           <div class="schedule-grid" id="schedule-grid">
             <?php
+            $showArchived = isset($_GET['view']) && $_GET['view'] === 'archived';
 
             try {
-              // Fetch schedules (all for now, or just active)
+              $whereClause = $showArchived ? "qs.deleted_at IS NOT NULL" : "qs.deleted_at IS NULL";
+              // Fetch schedules
               $query = "SELECT qs.*, 
-                          (SELECT COUNT(*) FROM queue_list ql WHERE ql.schedule_id = qs.schedule_id) as booked_count
+                          (SELECT COUNT(*) FROM queue_list ql WHERE ql.schedule_id = qs.schedule_id AND ql.deleted_at IS NULL) as booked_count
                           FROM queue_schedule qs 
+                          WHERE $whereClause
                           ORDER BY (CASE WHEN qs.status = 'active' THEN 0 ELSE 1 END), qs.schedule_date DESC, qs.start_time DESC";
               $stmt = $db->prepare($query);
               $stmt->execute();
@@ -161,20 +170,32 @@ if (!isset($_SESSION['admin'])) {
                               <div class="progress-bar" style="width: ' . $percentage . '%; ' . ($percentage >= 90 ? 'background: var(--warning);' : '') . ' ' . ($status === 'cancelled' || $status === 'closed' ? 'background: #cbd5e1;' : '') . '"></div>
                             </div>
                           </div>
-                          <div class="schedule-actions" style="gap: 10px; flex-wrap: wrap;">';
-
+                          <div class="schedule-actions" style="gap: 10px; flex-wrap: wrap;">
+'; ?>
+<?php
                   if ($status === 'active') {
                     echo '<a href="manage-queue.php?id=' . $row['schedule_id'] . '" class="btn-manage" style="text-align: center; text-decoration: none; flex: 1; min-width: 100px;">Manage</a>
-                                  <button class="btn-cancel-schedule" data-id="' . $row['schedule_id'] . '" style="background: #fee2e2; color: #ef4444; border: none; padding: 10px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; flex: 1; min-width: 100px;">Cancel</button>';
+                                   <button class="btn-cancel-schedule" data-id="' . $row['schedule_id'] . '" style="background: #fee2e2; color: #ef4444; border: none; padding: 10px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; flex: 1; min-width: 100px;">Cancel</button>';
                   } elseif ($status === 'cancelled' || $status === 'closed') {
                     echo '<div style="display: flex; flex-direction: column; width: 100%; gap: 10px;">
                                     <div style="display: flex; gap: 10px; width: 100%;">
-                                      <a href="../../../server/api/events/download_report.php?id=' . $row['schedule_id'] . '" class="btn-download" style="background: #dcfce7; color: #16a34a; text-decoration: none; text-align: center; padding: 10px; border-radius: 8px; font-weight: 600; flex: 1;">Report</a>
-                                      <button class="btn-remove-schedule" data-id="' . $row['schedule_id'] . '" style="background: #f1f5f9; color: #64748b; border: none; padding: 10px; border-radius: 8px; font-weight: 600; cursor: pointer; flex: 1;">Remove</button>
-                                    </div>
-                                    <button disabled style="width: 100%; background: #f1f5f9; color: #94a3b8; border: none; padding: 10px; border-radius: 8px; font-weight: 600;">Schedule ' . ucfirst($status) . '</button>
-                                  </div>';
+                                      <a href="../../../server/api/events/download_report.php?id=' . $row['schedule_id'] . '" class="btn-download" style="background: #dcfce7; color: #16a34a; text-decoration: none; text-align: center; padding: 10px; border-radius: 8px; font-weight: 600; flex: 1;">Report</a>';
+                    
+                    if (!$showArchived) {
+                        echo '<button class="btn-archive-schedule" data-id="' . $row['schedule_id'] . '" style="background: #f1f5f9; color: #64748b; border: none; padding: 10px; border-radius: 8px; font-weight: 600; cursor: pointer; flex: 1;">Archive</button>';
+                    }
+                    
+                    echo '</div>';
+                    
+                    if ($showArchived) {
+                        echo '<button disabled style="width: 100%; background: #f1f5f9; color: #94a3b8; border: none; padding: 10px; border-radius: 8px; font-weight: 600;">Archived</button>';
+                    } else {
+                        echo '<button disabled style="width: 100%; background: #f1f5f9; color: #94a3b8; border: none; padding: 10px; border-radius: 8px; font-weight: 600;">Schedule ' . ucfirst($status) . '</button>';
+                    }
+                    
+                    echo '</div>';
                   }
+             
 
                   echo '</div>
                         </div>';
@@ -300,10 +321,10 @@ if (!isset($_SESSION['admin'])) {
         }
       });
 
-      // Handle Remove Schedule
-      $(document).on('click', '.btn-remove-schedule', function () {
+      // Handle Archive Schedule
+      $(document).on('click', '.btn-archive-schedule', function () {
         const id = $(this).data('id');
-        if (confirm('Are you sure you want to permanently REMOVE this schedule from the list? All associated queue data will be deleted.')) {
+        if (confirm('Are you sure you want to ARCHIVE this schedule? It will be moved to history but data remains safe.')) {
           const $btn = $(this);
           $btn.prop('disabled', true).text('...');
 
@@ -314,16 +335,15 @@ if (!isset($_SESSION['admin'])) {
             dataType: 'json',
             success: function (response) {
               if (response.success) {
-                alert(response.message);
                 location.reload();
               } else {
                 alert('Error: ' + response.message);
-                $btn.prop('disabled', false).text('Remove');
+                $btn.prop('disabled', false).text('Archive');
               }
             },
             error: function () {
               alert('Failed to connect to the server.');
-              $btn.prop('disabled', false).text('Remove');
+              $btn.prop('disabled', false).text('Archive');
             }
           });
         }

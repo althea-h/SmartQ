@@ -6,7 +6,7 @@ $database = new Database();
 $db = $database->getConnection();
 
 // Fetch schedules (acting as the 'events')
-$query = "SELECT schedule_id, schedule_date, opening_time, start_time, end_time, slot_limit FROM queue_schedule ORDER BY schedule_date DESC, start_time ASC";
+$query = "SELECT schedule_id, schedule_date, opening_time, start_time, end_time, slot_limit FROM queue_schedule WHERE deleted_at IS NULL ORDER BY schedule_date DESC, start_time ASC";
 $stmt = $db->prepare($query);
 $stmt->execute();
 

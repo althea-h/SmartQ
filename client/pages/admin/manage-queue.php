@@ -110,9 +110,16 @@ if (!isset($_SESSION['admin'])) {
                   <span class="meta-item"> <?= $bookedCount ?> / <?= $schedule['slot_limit'] ?> Students</span>
                 </div>
               </div>
-              <div class="queue-actions">
+              <div class="queue-actions" style="display: flex; gap: 10px;">
+                <div class="now-serving-box" style="background: #eff6ff; border: 1px solid #bfdbfe; padding: 5px 15px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                    <span style="font-size: 0.7rem; color: #1e40af; font-weight: 700; text-transform: uppercase;">Now Serving</span>
+                    <strong id="current-number-display" style="font-size: 1.2rem; color: #1e40af;">#<?= str_pad($schedule['current_number'], 3, '0', STR_PAD_LEFT) ?></strong>
+                </div>
+                <button id="btn-advance-queue" class="btn-primary" style="background: #10b981; border: none; padding: 0 20px; border-radius: 8px; font-weight: 600; cursor: pointer; color: white;">
+                    Call Next Student
+                </button>
                 <a href="../../../server/api/events/download_report.php?id=<?= $schedule_id ?>" class="btn-primary"
-                  style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">Download
+                  style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center; background: #f1f5f9; color: #475569;">Download
                   List</a>
               </div>
             </header>
@@ -244,6 +251,10 @@ if (!isset($_SESSION['admin'])) {
     });
 
     $(document).ready(function () {
+      // Highlight currently serving row
+      const currentNum = '<?= str_pad($schedule['current_number'], 3, '0', STR_PAD_LEFT) ?>';
+      $(`.students-table tr:has(strong:contains("#${currentNum}"))`).css('background', '#f0f9ff');
+
       const $modal = $('#status-modal');
       const $modalIcon = $('#modal-icon');
       const $modalTitle = $('#modal-title');
@@ -293,6 +304,39 @@ if (!isset($_SESSION['admin'])) {
           title: 'Reject / Cancel Validation?',
           desc: `Are you sure you want to reject the validation request for Student ${id}? Their status will be reset to Not Validated.`,
           confirmColor: '#ef4444'
+        });
+      });
+
+      // Advance Queue (Call Next)
+      $('#btn-advance-queue').on('click', function () {
+        const $btn = $(this);
+        const scheduleId = '<?= $schedule_id ?>';
+
+        $btn.prop('disabled', true).text('Calling...');
+
+        $.ajax({
+          url: '../../../server/api/events/advance_queue.php',
+          method: 'POST',
+          data: { schedule_id: scheduleId },
+          dataType: 'json',
+          success: function (res) {
+            if (res.success) {
+              const padded = String(res.current_number).padStart(3, '0');
+              $('#current-number-display').text('#' + padded);
+              
+              // Highlight the row in the table if it exists
+              $('.students-table tr').css('background', ''); // Reset
+              $(`.students-table tr:has(strong:contains("#${padded}"))`).css('background', '#f0f9ff');
+            } else {
+              alert('Error: ' + res.message);
+            }
+          },
+          error: function () {
+            alert('Failed to connect to the server.');
+          },
+          complete: function () {
+            $btn.prop('disabled', false).text('Call Next Student');
+          }
         });
       });
 

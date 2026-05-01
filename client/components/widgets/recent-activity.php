@@ -13,7 +13,7 @@ $db = $database->getConnection();
 $query = "SELECT s.first_name, s.last_name, s.student_id, s.validated_at, st.status_name
           FROM students s
           JOIN validation_status st ON s.status_id = st.status_id
-          WHERE s.validated_at IS NOT NULL
+          WHERE s.validated_at IS NOT NULL AND s.deleted_at IS NULL
           ORDER BY s.validated_at DESC
           LIMIT 5";
 

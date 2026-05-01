@@ -9,22 +9,14 @@ require_once '../../../server/config/database.php';
 $database = new Database();
 $db = $database->getConnection();
 
-// Fetch Real Stats
-// 1. Total Students
-$stmt = $db->query("SELECT COUNT(*) FROM students");
-$total_students = $stmt->fetchColumn();
+// Fetch Stats from system_stats
+$stmt = $db->query("SELECT stat_key, stat_value FROM system_stats");
+$stats_data = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
 
-// 2. Currently Queueing (Total entries in queue_list)
-$stmt = $db->query("SELECT COUNT(*) FROM queue_list");
-$queueing = $stmt->fetchColumn();
-
-// 3. Validated Students
-$stmt = $db->query("SELECT COUNT(*) FROM students s JOIN validation_status vs ON s.status_id = vs.status_id WHERE vs.status_name = 'Validated'");
-$validated = $stmt->fetchColumn();
-
-// 4. Not Validated Students
-$stmt = $db->query("SELECT COUNT(*) FROM students s JOIN validation_status vs ON s.status_id = vs.status_id WHERE vs.status_name = 'Not Validated'");
-$not_validated = $stmt->fetchColumn();
+$total_students = $stats_data['total_students'] ?? 0;
+$queueing       = $stats_data['queueing'] ?? 0;
+$validated      = $stats_data['validated_students'] ?? 0;
+$not_validated  = $stats_data['not_validated'] ?? 0;
 ?>
 <!DOCTYPE html>
 <html lang="en">

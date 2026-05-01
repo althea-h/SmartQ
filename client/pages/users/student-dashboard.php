@@ -64,24 +64,43 @@ $current_status = $status_map[$status_id] ?? $status_map[2];
         <div class="student-container">
 
           <!-- ── Hero / Status ── -->
-          <div class="student-hero">
+          <div class="student-hero" style="background: linear-gradient(135deg, #1e293b 0%, #334155 100%);">
             <div class="hero-welcome">
-              <h1>Hello, <?php echo htmlspecialchars($user['first_name']); ?>!</h1>
-              <p>Keep your ID validated to enjoy seamless campus services.</p>
-              <div class="status-pill <?php echo $current_status['class']; ?>">
-                Status: <?php echo $current_status['label']; ?>
-              </div>
+              <h1 style="font-weight: 800; letter-spacing: -0.5px;">Welcome,
+                <?php echo htmlspecialchars($user['first_name']); ?>!
+              </h1>
+              <p style="color: #94a3b8; font-size: 1.1rem;">Manage your queue status and ID validation from your
+                dashboard.</p>
             </div>
+            <div class="hero-status-badge">
+              <span class="status-pill <?php echo $current_status['class']; ?>"
+                style="font-size: 0.9rem; padding: 8px 16px;">
+                Current Status: <?php echo $current_status['label']; ?>
+              </span>
+            </div>
+          </div>
+
+          <!-- ── Quick Stats ── -->
+          <div class="student-stats-grid"
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px;">
+            <div data-component="stat-card"
+              data-props='{"label":"Current Status", "value":"<?php echo $current_status['label']; ?>", "trend": "<?php echo $status_id == 1 ? 'up' : 'flat'; ?>"}'>
+            </div>
+            <?php if (isset($booking['queue_number'])): ?>
+              <div data-component="stat-card"
+                data-props='{"label":"Queue Number", "value":"#<?php echo str_pad($booking['queue_number'], 3, '0', STR_PAD_LEFT); ?>", "trend": "flat"}'>
+              </div>
+            <?php endif; ?>
           </div>
 
           <!-- ── Active Queue (If booked) ── -->
           <?php
           try {
             // Fetch the latest booking for the student that is in an active schedule
-            $query = "SELECT ql.queue_number, ql.schedule_id, qs.schedule_date, qs.start_time, qs.end_time 
+            $query = "SELECT ql.queue_number, ql.schedule_id, qs.schedule_date, qs.start_time, qs.end_time, qs.current_number 
                         FROM queue_list ql
                         JOIN queue_schedule qs ON ql.schedule_id = qs.schedule_id
-                        WHERE ql.student_id = :sid AND qs.status = 'active' AND qs.schedule_date >= CURDATE()
+                        WHERE ql.student_id = :sid AND qs.status = 'active' AND qs.schedule_date >= CURDATE() AND ql.deleted_at IS NULL
                         ORDER BY qs.schedule_date ASC LIMIT 1";
             $stmt = $db->prepare($query);
             $stmt->bindParam(':sid', $user['student_id']);
@@ -92,25 +111,76 @@ $current_status = $status_map[$status_id] ?? $status_map[2];
               $bDate = new DateTime($booking['schedule_date']);
               $bStart = new DateTime($booking['start_time']);
               $bEnd = new DateTime($booking['end_time']);
+
+              $myNum = (int) $booking['queue_number'];
+              $servingNum = (int) $booking['current_number'];
+
+              $notifMsg = "";
+              $notifClass = "";
+
+              if ($status_id == 1) { // 1 = Validated
+                $notifMsg = "You are validated! Your ID is now active.";
+                $notifClass = "notif-now";
+              } else if ($servingNum == 0) {
+                $notifMsg = "Waiting for validation to start.";
+              } else if ($myNum == $servingNum) {
+                $notifMsg = "It's your turn! Please proceed to the counter.";
+                $notifClass = "notif-now";
+              } else if ($myNum == $servingNum + 1) {
+                $notifMsg = "You are next! Please prepare your documents.";
+                $notifClass = "notif-next";
+              } else if ($myNum > $servingNum) {
+                $notifMsg = "Currently serving: No. " . $servingNum;
+              } else {
+                $notifMsg = "Your number has passed.";
+              }
               ?>
-                  <div class="queue-highlight" style="display: flex; justify-content: space-between; align-items: center;">
-                    <div style="display: flex; align-items: center; gap: 20px;">
-                      <div class="queue-num-box">
-                        <span>No.</span>
-                        <span><?php echo $booking['queue_number']; ?></span>
-                      </div>
-                      <div class="queue-details">
-                        <h4 style="margin: 0; color: #1e293b;">Active Queue Booking</h4>
-                        <p style="margin: 5px 0 0; color: #64748b;">Schedule: <?php echo $bDate->format('F d, Y'); ?>
-                          (<?php echo $bStart->format('h:i A') . ' - ' . $bEnd->format('h:i A'); ?>)</p>
-                      </div>
+              <div class="queue-highlight" style="display: flex; flex-direction: column; gap: 15px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                  <div style="display: flex; align-items: center; gap: 20px;">
+                    <div class="queue-num-box"
+                      style="background: white; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border: 1px solid #e2e8f0;">
+                      <span style="color: #94a3b8;">No.</span>
+                      <span style="color: var(--student-primary);"><?php echo $myNum; ?></span>
                     </div>
-                    <button class="btn-cancel-booking" data-id="<?php echo $booking['schedule_id']; ?>" 
-                            style="background: #fee2e2; color: #dc2626; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s;">
+                    <div class="queue-details">
+                      <h4 style="margin: 0; color: #1e293b; font-weight: 700;">Active Queue Booking</h4>
+                      <p style="margin: 5px 0 0; color: #64748b; font-weight: 500;">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                          style="vertical-align: middle; margin-right: 4px;">
+                          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                          <line x1="16" y1="2" x2="16" y2="6"></line>
+                          <line x1="8" y1="2" x2="8" y2="6"></line>
+                          <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                        <?php echo $bDate->format('F d, Y'); ?>
+                      </p>
+                      <p style="margin: 3px 0 0; color: #94a3b8; font-size: 0.8rem;">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                          style="vertical-align: middle; margin-right: 4px;">
+                          <circle cx="12" cy="12" r="10"></circle>
+                          <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                        <?php echo $bStart->format('h:i A') . ' - ' . $bEnd->format('h:i A'); ?>
+                      </p>
+                    </div>
+                  </div>
+                  <?php if ($status_id != 1): ?>
+                    <button class="btn-cancel-booking" data-id="<?php echo $booking['schedule_id']; ?>"
+                      style="background: #fee2e2; color: #dc2626; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s;">
                       Cancel
                     </button>
-                  </div>
-                <?php
+                  <?php endif; ?>
+                </div>
+
+                <!-- Queue Status Notification -->
+                <div class="queue-notif <?php echo $notifClass; ?>"
+                  style="background: #f8fafc; border-left: 4px solid #cbd5e1; padding: 12px 15px; border-radius: 0 8px 8px 0; display: flex; align-items: center; gap: 10px;">
+                  <div class="notif-dot"></div>
+                  <span style="font-weight: 500; color: #334155;"><?php echo $notifMsg; ?></span>
+                </div>
+              </div>
+              <?php
             endif;
           } catch (Exception $e) {
             // Silent fail for dashboard highlight
