@@ -134,10 +134,11 @@
    ═══════════════════════════════════════════════════════════════ */
 .dash-panels {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 32px;
-  flex: 1;
-  min-height: 0;
+  grid-template-columns: 1.3fr 1fr; /* Refined balance */
+  gap: 24px;
+  height: 350px; /* More compact height */
+  max-width: 1200px; /* Prevent excessive horizontal stretching */
+  flex-shrink: 0;
 }
 
 
@@ -174,13 +175,13 @@
 .chart-card {
   background: white;
   border-radius: 24px;
-  padding: 24px;
+  padding: 20px; /* Slightly reduced padding */
   border: 1px solid rgba(0, 0, 0, 0.04);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  height: 100%; /* Ensure it fills the grid panel */
+  gap: 16px;
+  height: 100%;
 }
 
 .chart-header {

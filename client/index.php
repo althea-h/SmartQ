@@ -24,13 +24,12 @@
     <div class="container">
       <div class="logo">
         <img src="assets/logo/sq-blue-d.png" alt="SmartQ Logo">
-        <span>SmartQ</span>
       </div>
 
       <div class="nav-links">
         <a href="#home">Home</a>
-        <a href="#services">Services</a>
         <a href="#about">About</a>
+        <a href="#team">Team</a>
         <a href="#contact">Contact</a>
       </div>
 
@@ -60,35 +59,7 @@
           <a href="pages/signup.php" class="btn-main btn-primary">
             Start Your Journey <i class="fas fa-arrow-right"></i>
           </a>
-          <a href="#services" class="btn-main btn-secondary">Explore Features</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- SERVICES SECTION -->
-  <section id="services">
-    <div class="container">
-      <div class="section-header">
-        <h2>Our Core Services</h2>
-        <p>Everything you need to manage participant flow and validation security in one powerful platform.</p>
-      </div>
-
-      <div class="services-grid">
-        <div class="service-card">
-          <div class="service-icon"><i class="fas fa-id-card"></i></div>
-          <h3>ID Validation</h3>
-          <p>Real-time verification of student identities with instant status updates and secure logging.</p>
-        </div>
-        <div class="service-card">
-          <div class="service-icon"><i class="fas fa-users-viewfinder"></i></div>
-          <h3>Smart Queuing</h3>
-          <p>Automated number assignment and fair, transparent flow management for any campus event.</p>
-        </div>
-        <div class="service-card">
-          <div class="service-icon"><i class="fas fa-chart-line"></i></div>
-          <h3>Live Analytics</h3>
-          <p>Monitor queue progress, wait times, and capacity utilization through a real-time dashboard.</p>
+          <a href="#about" class="btn-main btn-secondary">Explore Features</a>
         </div>
       </div>
     </div>
@@ -140,10 +111,14 @@
           </div>
         </div>
       </div>
+    </div>
+  </section>
 
-      <!-- TEAM SECTION (Inside About) -->
+  <!-- TEAM SECTION -->
+  <section id="team">
+    <div class="container">
       <div class="team-section">
-        <div class="section-header" style="margin-top: 100px; margin-bottom: 40px;">
+        <div class="section-header" style="margin-bottom: 40px;">
           <h2>Meet the Team</h2>
           <p>The innovative minds behind the SmartQ system.</p>
         </div>
@@ -169,7 +144,7 @@
           <!-- Team Member 2 -->
           <div class="team-card">
             <div class="team-img-large">
-              <img src="assets/img/bernbern.jpg" alt="Owen Jerusalem">
+              <img src="assets/img/bernbern.jpg" alt="Alejandra Bernasol">
             </div>
             <div class="team-info">
               <h4>Alejandra Bernasol</h4>
@@ -216,9 +191,6 @@
               </div>
             </div>
           </div>
-
-
-
         </div>
       </div>
     </div>

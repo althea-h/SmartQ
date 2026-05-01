@@ -35,7 +35,10 @@ $user = $_SESSION['student'];
               <p>Choose a convenient date and time to validate your ID.</p>
             </div>
             <div class="status-pill" style="margin-top: 0; background: rgba(255, 255, 255, 0.15);">
-              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-right: 8px;"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                style="margin-right: 8px;">
+                <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
               Real-time Availability
             </div>
           </div>
@@ -85,11 +88,11 @@ $user = $_SESSION['student'];
                   </div>';
               }
             }
-          ?>
+            ?>
 
-          <!-- ── Schedule Grid ── -->
-          <div class="student-grid" id="booking-grid">
-            <?php
+            <!-- ── Schedule Grid ── -->
+            <div class="student-grid" id="booking-grid">
+              <?php
               // Fetch only active schedules
               $query = "SELECT qs.*, 
                           (SELECT COUNT(*) FROM queue_list ql WHERE ql.schedule_id = qs.schedule_id) as booked_count
@@ -164,7 +167,7 @@ $user = $_SESSION['student'];
                       </div>
 
                       <div class="card-footer">';
-                  
+
                   if ($is_booked) {
                     echo '<button disabled style="width: 100%; background: #f0fdf4; color: #16a34a; border: 1px solid #bdf4d4; padding: 12px; border-radius: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px;">
                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
@@ -181,20 +184,20 @@ $user = $_SESSION['student'];
                             Book This Slot
                           </button>';
                   }
-                  
+
                   echo '</div></div>';
                 }
               } else {
                 echo '<div style="grid-column: 1/-1; text-align: center; padding: 80px 20px; background: white; border-radius: 32px; border: 2px dashed #e2e8f0; animation: slideDown 0.5s ease-out;">
-                        <div style="font-size: 5rem; margin-bottom: 24px;">📅</div>
+                        <div style="font-size: 5rem; margin-bottom: 24px;"></div>
                         <h3 style="color: #1e293b; margin-bottom: 12px; font-size: 1.6rem; font-weight: 800;">No Schedules Today</h3>
                         <p style="color: #64748b; font-size: 1.1rem; max-width: 400px; margin: 0 auto;">Validation slots are currently closed. Please check again tomorrow morning for updates.</p>
                       </div>';
               }
-            } catch (Exception $e) {
-              echo '<div style="grid-column: 1/-1;" class="booking-alert warning">Error: ' . $e->getMessage() . '</div>';
-            }
-            ?>
+          } catch (Exception $e) {
+            echo '<div style="grid-column: 1/-1;" class="booking-alert warning">Error: ' . $e->getMessage() . '</div>';
+          }
+          ?>
           </div>
         </div>
       </main>
