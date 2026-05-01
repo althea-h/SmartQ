@@ -3,6 +3,9 @@
   This file serves as the single source of truth for colors, typography, and spacing.
 */
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css');
+
 :root {
   /* --- COLOR PALETTE --- */
   /* Primary brand colors */
@@ -96,6 +99,7 @@ body {
   line-height: 1.5;
   background-color: var(--bg-color);
   color: var(--text-main);
+  scrollbar-gutter: stable;
 }
 
 h1,

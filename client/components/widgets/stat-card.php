@@ -1,28 +1,33 @@
 <?php
 /**
  * Stat Card Widget
- * 
- * Usage:
- *   <div data-component="stat-card" 
- *        data-props='{"icon":"📋","label":"Total Queues","value":"128","trend":"+12%"}'>
- *   </div>
- * 
- * Accepts:
- *   - icon  : Emoji or icon HTML
- *   - label : Card heading
- *   - value : Main stat number
- *   - trend : Optional trend indicator (e.g. "+12%")
  */
 
-$icon = isset($_GET['icon']) ? htmlspecialchars($_GET['icon']) : '';
+function get_stat_icon($filename) {
+    $path = __DIR__ . '/../../assets/icons/sidebar/' . $filename;
+    if (file_exists($path)) {
+        return file_get_contents($path);
+    }
+    return '';
+}
+
+$iconName = isset($_GET['icon']) ? $_GET['icon'] : '';
 $label = isset($_GET['label']) ? htmlspecialchars($_GET['label']) : 'Stat';
 $value = isset($_GET['value']) ? htmlspecialchars($_GET['value']) : '—';
 $trend = isset($_GET['trend']) ? htmlspecialchars($_GET['trend']) : '';
+
+// Resolve icon: if it ends in .svg, try to fetch it
+$iconContent = '';
+if (str_ends_with($iconName, '.svg')) {
+    $iconContent = get_stat_icon($iconName);
+} else {
+    $iconContent = htmlspecialchars($iconName);
+}
 ?>
 
 <div class="stat-card">
-  <?php if ($icon): ?>
-    <div class="stat-card-icon"><?= $icon ?></div>
+  <?php if ($iconContent): ?>
+    <div class="stat-card-icon"><?= $iconContent ?></div>
   <?php endif; ?>
   <div class="stat-card-body">
     <p class="stat-card-label"><?= $label ?></p>

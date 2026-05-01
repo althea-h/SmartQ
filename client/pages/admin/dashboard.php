@@ -1,9 +1,30 @@
 <?php
 session_start();
 if (!isset($_SESSION['admin'])) {
-    header('Location: ../login.php');
-    exit();
+  header('Location: ../login.php');
+  exit();
 }
+
+require_once '../../../server/config/database.php';
+$database = new Database();
+$db = $database->getConnection();
+
+// Fetch Real Stats
+// 1. Total Students
+$stmt = $db->query("SELECT COUNT(*) FROM students");
+$total_students = $stmt->fetchColumn();
+
+// 2. Currently Queueing (Total entries in queue_list)
+$stmt = $db->query("SELECT COUNT(*) FROM queue_list");
+$queueing = $stmt->fetchColumn();
+
+// 3. Validated Students
+$stmt = $db->query("SELECT COUNT(*) FROM students s JOIN validation_status vs ON s.status_id = vs.status_id WHERE vs.status_name = 'Validated'");
+$validated = $stmt->fetchColumn();
+
+// 4. Not Validated Students
+$stmt = $db->query("SELECT COUNT(*) FROM students s JOIN validation_status vs ON s.status_id = vs.status_id WHERE vs.status_name = 'Not Validated'");
+$not_validated = $stmt->fetchColumn();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -16,14 +37,6 @@ if (!isset($_SESSION['admin'])) {
 
   <!-- Component loader base -->
   <meta name="component-base" content="../../components/">
-
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
-  
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
   <!-- Stylesheets -->
   <link rel="stylesheet" href="../../assets/css/main.css">
@@ -52,12 +65,16 @@ if (!isset($_SESSION['admin'])) {
 
         <!-- ROW 1: Stat Cards (horizontal strip) -->
         <section class="dash-row dash-stats" id="dash-stats">
-          <div data-component="stat-card" data-props='{"icon":"n","label":"Total Students","value":"250"}'></div>
-          <div data-component="stat-card" data-props='{"icon":"n","label":"Queueing","value":"50"}'>
+          <div data-component="stat-card"
+            data-props='{"icon":"students.svg","label":"Total Students","value":"<?= $total_students ?>"}'></div>
+          <div data-component="stat-card" 
+            data-props='{"icon":"queue.svg","label":"Queueing","value":"<?= $queueing ?>"}'>
           </div>
-          <div data-component="stat-card" data-props='{"icon":"n","label":"Validated","value":"180"}'>
+          <div data-component="stat-card" 
+            data-props='{"icon":"dashboard.svg","label":"Validated","value":"<?= $validated ?>"}'>
           </div>
-          <div data-component="stat-card" data-props='{"icon":"n","label":"Not Validated","value":"20"}'>
+          <div data-component="stat-card"
+            data-props='{"icon":"reports.svg","label":"Not Validated","value":"<?= $not_validated ?>"}'>
           </div>
         </section>
 
