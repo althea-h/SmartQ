@@ -120,14 +120,14 @@
               <div class="icon"><i class="fas fa-shield-halved"></i></div>
               <div>
                 <h4>Secure Validation</h4>
-                <p>Multi-layered security checks to ensure every ID is authentic.</p>
+                <p>Admin validation approval for student ID and event.</p>
               </div>
             </div>
             <div class="feature-item">
               <div class="icon"><i class="fas fa-clock"></i></div>
               <div>
                 <h4>Smart Estimations</h4>
-                <p>AI-driven wait time calculations for better planning.</p>
+                <p>Manage schedules seamlessly with just a few clicks.</p>
               </div>
             </div>
             <div class="feature-item">
