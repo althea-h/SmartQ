@@ -72,14 +72,17 @@ $current_status = $status_map[$status_id] ?? $status_map[2];
             </div>
 
             <div class="hero-welcome" style="position: relative; z-index: 2;">
-              <h1 style="font-weight: 800; letter-spacing: -1px; font-size: 2.2rem; margin-bottom: 12px; color: #fff;">Welcome back, 
-                <span style="background: #1e40af; padding: 4px 16px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); display: inline-block; transform: rotate(-1deg);"><?php echo htmlspecialchars($user['first_name']); ?></span>!
+              <h1 style="font-weight: 800; letter-spacing: -1px; font-size: 2.2rem; margin-bottom: 12px; color: #fff;">
+                Welcome back,
+                <span
+                  style="background: #1e40af; padding: 4px 16px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); display: inline-block; transform: rotate(-1deg);"><?php echo htmlspecialchars($user['first_name']); ?></span>!
               </h1>
-              <p style="color: rgba(255, 255, 255, 0.85); font-size: 1.1rem; max-width: 400px; line-height: 1.6;">Your digital gateway to campus services. Keep your ID validated for full access.</p>
+              <p style="color: rgba(255, 255, 255, 0.85); font-size: 1.1rem; max-width: 400px; line-height: 1.6;">Your
+                digital gateway to campus services. Keep your ID validated for full access.</p>
             </div>
 
             <div class="hero-status-card"
-              style="position: relative; z-index: 2; background: rgba(255,255,255,0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); padding: 24px; border-radius: 20px; min-width: 280px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+              style="position: relative; z-index: 2; background: rgba(255, 255, 255, 1); padding: 20px; border-radius: 20px;">
               <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
                 <div
                   style="width: 48px; height: 48px; border-radius: 12px; background: <?php echo $status_id == 1 ? 'rgba(34, 197, 94, 0.2)' : 'rgba(245, 158, 11, 0.2)'; ?>; display: flex; align-items: center; justify-content: center;">
@@ -103,8 +106,9 @@ $current_status = $status_map[$status_id] ?? $status_map[2];
                   <span
                     style="display: block; font-size: 0.75rem; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">Student
                     Status</span>
-                  <h3 style="margin: 0; color: white; font-size: 1.2rem; font-weight: 700;">
-                    <?php echo $current_status['label']; ?></h3>
+                  <h3 style="margin: 0; color: var(--text-main); font-size: 1.2rem; font-weight: 700;">
+                    <?php echo $current_status['label']; ?>
+                  </h3>
                 </div>
               </div>
               <div

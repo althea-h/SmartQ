@@ -32,10 +32,26 @@ function get_icon($filename)
 ?>
 
 <?php
+// Determine user session
 $admin_data = $_SESSION['admin'] ?? null;
-$full_name = $admin_data ? ($admin_data['first_name'] . ' ' . $admin_data['last_name']) : 'Administrator';
-$initial = $admin_data ? strtoupper(substr($admin_data['first_name'], 0, 1)) : 'A';
-$avatar_url = $admin_data['avatar_url'] ?? null; // Placeholder for future upload logic
+$student_data = $_SESSION['student'] ?? null;
+
+$full_name = 'User';
+$initial = 'U';
+$avatar_url = null;
+$user_role = 'Guest';
+
+if ($admin_data) {
+  $full_name = $admin_data['first_name'] . ' ' . $admin_data['last_name'];
+  $initial = strtoupper(substr($admin_data['first_name'], 0, 1));
+  $avatar_url = $admin_data['avatar_url'] ?? null;
+  $user_role = 'Super Admin';
+} elseif ($student_data) {
+  $full_name = $student_data['first_name'] . ' ' . $student_data['last_name'];
+  $initial = strtoupper(substr($student_data['first_name'], 0, 1));
+  $avatar_url = $student_data['profile_image'] ?? null;
+  $user_role = 'Student';
+}
 ?>
 
 <header class="topbar" id="topbar">
@@ -68,19 +84,23 @@ $avatar_url = $admin_data['avatar_url'] ?? null; // Placeholder for future uploa
 
     <!-- User Profile -->
     <div class="topbar-user-profile" id="user-menu">
-      <a href="profile.php" class="topbar-user-link">
-        <div class="topbar-avatar">
+      <div class="topbar-user-link">
+        <div class="topbar-avatar" id="avatar-container" title="Click to upload profile picture">
           <?php if ($avatar_url): ?>
-            <img src="<?= htmlspecialchars($avatar_url) ?>" alt="Avatar" class="avatar-img">
+            <img src="<?= htmlspecialchars($avatar_url) ?>" alt="Avatar" class="avatar-img" id="current-avatar">
           <?php else: ?>
-            <?= $initial ?>
+            <span id="avatar-initial"><?= $initial ?></span>
           <?php endif; ?>
+          <div class="avatar-overlay">
+            <i class="fas fa-camera"></i>
+          </div>
+          <input type="file" id="avatar-upload" style="display: none;" accept="image/*">
         </div>
         <div class="topbar-user-info">
           <span class="topbar-username"><?= htmlspecialchars($full_name) ?></span>
-          <span class="topbar-user-role">Super Admin</span>
+          <span class="topbar-user-role"><?= htmlspecialchars($user_role) ?></span>
         </div>
-      </a>
+      </div>
     </div>
   </div>
 
@@ -137,6 +157,53 @@ $avatar_url = $admin_data['avatar_url'] ?? null; // Placeholder for future uploa
       if (!$(e.target).closest('.topbar-search-wrapper').length) {
         $results.hide();
       }
+    });
+
+    // Avatar Upload Logic
+    const $avatarContainer = $('#avatar-container');
+    const $avatarInput = $('#avatar-upload');
+
+    $avatarContainer.on('click', function () {
+      $avatarInput.click();
+    });
+
+    $avatarInput.on('change', function () {
+      const file = this.files[0];
+      if (!file) return;
+
+      const formData = new FormData();
+      formData.append('avatar', file);
+
+      // Show loading state
+      $avatarContainer.addClass('uploading');
+
+      $.ajax({
+        url: '../../../server/api/users/upload_avatar.php',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: 'json',
+        success: function (response) {
+          $avatarContainer.removeClass('uploading');
+          if (response.success) {
+            if ($('#current-avatar').length) {
+              $('#current-avatar').attr('src', response.avatar_url);
+            } else {
+              $avatarContainer.html(`<img src="${response.avatar_url}" alt="Avatar" class="avatar-img" id="current-avatar">
+                <div class="avatar-overlay"><i class="fas fa-camera"></i></div>
+                <input type="file" id="avatar-upload" style="display: none;" accept="image/*">`);
+            }
+            alert('Profile picture updated successfully!');
+          } else {
+            alert('Error: ' + response.message);
+          }
+        },
+        error: function () {
+          $avatarContainer.removeClass('uploading');
+          alert('Failed to upload image. Please try again.');
+        }
+      });
     });
   });
 </script>
