@@ -51,17 +51,15 @@ if (move_uploaded_file($file['tmp_name'], $target_path)) {
             // Update session
             $_SESSION['student']['profile_image'] = $db_path;
         } else if (isset($_SESSION['admin'])) {
-            // Placeholder for admin avatar update if table exists
-            // Assuming admins table has avatar_url column
-            /*
             $admin_id = $_SESSION['admin']['id'];
-            $query = "UPDATE users SET avatar_url = :img WHERE id = :id";
+            $query = "UPDATE admin SET profile_image = :img WHERE amdin_id = :id";
             $stmt = $db->prepare($query);
             $stmt->bindParam(':img', $db_path);
             $stmt->bindParam(':id', $admin_id);
             $stmt->execute();
-            $_SESSION['admin']['avatar_url'] = $db_path;
-            */
+
+            // Update session
+            $_SESSION['admin']['profile_image'] = $db_path;
         }
 
         echo json_encode([

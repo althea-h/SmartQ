@@ -44,7 +44,7 @@ $user_role = 'Guest';
 if ($admin_data) {
   $full_name = $admin_data['first_name'] . ' ' . $admin_data['last_name'];
   $initial = strtoupper(substr($admin_data['first_name'], 0, 1));
-  $avatar_url = $admin_data['avatar_url'] ?? null;
+  $avatar_url = $admin_data['profile_image'] ?? null;
   $user_role = 'Super Admin';
 } elseif ($student_data) {
   $full_name = $student_data['first_name'] . ' ' . $student_data['last_name'];

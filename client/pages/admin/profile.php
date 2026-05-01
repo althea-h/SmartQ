@@ -26,6 +26,11 @@ $adminId = $admin['id'] ?? 'N/A';
   <link rel="stylesheet" href="../../assets/css/components/components.css">
   <link rel="stylesheet" href="../../assets/css/admin/profile.css">
 
+  <style>
+    .profile-avatar-box:hover .avatar-overlay {
+      opacity: 1 !important;
+    }
+  </style>
   <title>SmartQ | Admin Profile</title>
 </head>
 
@@ -50,8 +55,15 @@ $adminId = $admin['id'] ?? 'N/A';
 
           <!-- Profile Header -->
           <div class="profile-header">
-            <div class="profile-avatar-box">
-              <?= $initial ?>
+            <div class="profile-avatar-box" id="profile-avatar-main" style="cursor: pointer; position: relative; overflow: hidden; background: var(--primary-color); color: white; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 800;">
+              <?php if (isset($admin['profile_image']) && $admin['profile_image']): ?>
+                <img src="<?= htmlspecialchars($admin['profile_image']) ?>" alt="Profile" id="profile-img-preview" style="width: 100%; height: 100%; object-fit: cover;">
+              <?php else: ?>
+                <span id="profile-initial-preview"><?= $initial ?></span>
+              <?php endif; ?>
+              <div class="avatar-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s;">
+                <i class="fas fa-camera" style="color: white; font-size: 1.5rem;"></i>
+              </div>
             </div>
             <div class="profile-meta">
               <h1><?= $fullName ?></h1>
@@ -129,6 +141,11 @@ $adminId = $admin['id'] ?? 'N/A';
       $('#profileForm').on('submit', function (e) {
         e.preventDefault();
         alert('Your changes have been saved successfully!');
+      });
+
+      // Handle Profile Picture Upload Trigger
+      $('#profile-avatar-main').on('click', function() {
+        $('#avatar-upload').click();
       });
     });
 
