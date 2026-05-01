@@ -30,7 +30,8 @@ function sidebar_icon($filename)
 
   <!-- Brand -->
   <div class="sidebar-brand">
-    <span class="sidebar-title">SmartQ</span>
+    <!-- <img src="../../assets/logo/sq.png" alt="SmartQ" class="sidebar-logo"> -->
+    <span class="sidebar-title">SMARTQ</span>
   </div>
 
   <!-- Navigation -->

@@ -5,7 +5,8 @@
 .queue-container {
   display: flex;
   flex-direction: column;
-  gap: var(--space-xl);
+  gap: 32px;
+  padding: 32px 40px;
 }
 
 /* ── Header Area ───────────────────────────────────────────── */
@@ -278,4 +279,29 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--space-md);
+}
+
+/* ── Manage Queue Container ────────────────────────────────── */
+.manage-container {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding: 32px 40px;
+}
+
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: 0.2s;
+  width: fit-content;
+}
+
+.btn-back:hover {
+  color: var(--primary-color);
+  transform: translateX(-4px);
 }
