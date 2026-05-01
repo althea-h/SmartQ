@@ -64,39 +64,58 @@ $current_status = $status_map[$status_id] ?? $status_map[2];
         <div class="student-container">
 
           <!-- ── Hero / Status ── -->
-          <div class="student-hero" style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); position: relative; padding: 40px; border-radius: 24px; box-shadow: 0 20px 40px -10px rgba(0,0,0,0.3); overflow: hidden; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 30px;">
+          <div class="student-hero"
+            style="background: linear-gradient(135deg, var(--student-primary) 0%, #1d4ed8 100%); position: relative; padding: 40px; border-radius: 24px; box-shadow: 0 20px 40px -10px rgba(59, 130, 246, 0.3); overflow: hidden; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 30px;">
             <!-- Decorative Background Element -->
-            <div style="position: absolute; top: -100px; right: -100px; width: 300px; height: 300px; background: rgba(59, 130, 246, 0.1); border-radius: 50%; blur: 80px; pointer-events: none;"></div>
-            
-            <div class="hero-welcome" style="position: relative; z-index: 2;">
-              <h1 style="font-weight: 800; letter-spacing: -1px; font-size: 2.2rem; margin-bottom: 12px;">Welcome back, 
-                <span style="background: var(--student-primary); padding: 4px 16px; border-radius: 12px; box-shadow: 0 8px 20px rgba(59, 130, 246, 0.25); display: inline-block; transform: rotate(-1deg);"><?php echo htmlspecialchars($user['first_name']); ?></span>!
-              </h1>
-              <p style="color: #94a3b8; font-size: 1.1rem; max-width: 400px; line-height: 1.6;">Your digital gateway to campus services. Keep your ID validated for full access.</p>
+            <div
+              style="position: absolute; top: -100px; right: -100px; width: 300px; height: 300px; background: rgba(59, 130, 246, 0.1); border-radius: 50%; blur: 80px; pointer-events: none;">
             </div>
 
-            <div class="hero-status-card" style="position: relative; z-index: 2; background: rgba(255,255,255,0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); padding: 24px; border-radius: 20px; min-width: 280px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
-               <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-                  <div style="width: 48px; height: 48px; border-radius: 12px; background: <?php echo $status_id == 1 ? 'rgba(34, 197, 94, 0.2)' : 'rgba(245, 158, 11, 0.2)'; ?>; display: flex; align-items: center; justify-content: center;">
-                    <?php if($status_id == 1): ?>
-                      <svg width="24" height="24" fill="none" stroke="#22c55e" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                    <?php elseif($status_id == 3): ?>
-                      <svg width="24" height="24" fill="none" stroke="#f59e0b" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                    <?php else: ?>
-                      <svg width="24" height="24" fill="none" stroke="#ef4444" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                    <?php endif; ?>
-                  </div>
-                  <div>
-                    <span style="display: block; font-size: 0.75rem; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">Student Status</span>
-                    <h3 style="margin: 0; color: white; font-size: 1.2rem; font-weight: 700;"><?php echo $current_status['label']; ?></h3>
-                  </div>
-               </div>
-               <div style="height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; margin-bottom: 12px; overflow: hidden;">
-                  <div style="width: <?php echo $status_id == 1 ? '100%' : ($status_id == 3 ? '50%' : '10%'); ?>; height: 100%; background: <?php echo $status_id == 1 ? '#22c55e' : ($status_id == 3 ? '#f59e0b' : '#ef4444'); ?>; transition: width 1s ease;"></div>
-               </div>
-               <p style="margin: 0; font-size: 0.8rem; color: #64748b; font-weight: 500;">
-                  <?php echo $status_id == 1 ? 'Validated & Ready' : ($status_id == 3 ? 'Verification in progress' : 'Validation required'); ?>
-               </p>
+            <div class="hero-welcome" style="position: relative; z-index: 2;">
+              <h1 style="font-weight: 800; letter-spacing: -1px; font-size: 2.2rem; margin-bottom: 12px; color: #fff;">Welcome back, 
+                <span style="background: #1e40af; padding: 4px 16px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); display: inline-block; transform: rotate(-1deg);"><?php echo htmlspecialchars($user['first_name']); ?></span>!
+              </h1>
+              <p style="color: rgba(255, 255, 255, 0.85); font-size: 1.1rem; max-width: 400px; line-height: 1.6;">Your digital gateway to campus services. Keep your ID validated for full access.</p>
+            </div>
+
+            <div class="hero-status-card"
+              style="position: relative; z-index: 2; background: rgba(255,255,255,0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); padding: 24px; border-radius: 20px; min-width: 280px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+              <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                <div
+                  style="width: 48px; height: 48px; border-radius: 12px; background: <?php echo $status_id == 1 ? 'rgba(34, 197, 94, 0.2)' : 'rgba(245, 158, 11, 0.2)'; ?>; display: flex; align-items: center; justify-content: center;">
+                  <?php if ($status_id == 1): ?>
+                    <svg width="24" height="24" fill="none" stroke="#22c55e" stroke-width="2.5" viewBox="0 0 24 24">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  <?php elseif ($status_id == 3): ?>
+                    <svg width="24" height="24" fill="none" stroke="#f59e0b" stroke-width="2.5" viewBox="0 0 24 24">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                  <?php else: ?>
+                    <svg width="24" height="24" fill="none" stroke="#ef4444" stroke-width="2.5" viewBox="0 0 24 24">
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  <?php endif; ?>
+                </div>
+                <div>
+                  <span
+                    style="display: block; font-size: 0.75rem; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">Student
+                    Status</span>
+                  <h3 style="margin: 0; color: white; font-size: 1.2rem; font-weight: 700;">
+                    <?php echo $current_status['label']; ?></h3>
+                </div>
+              </div>
+              <div
+                style="height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; margin-bottom: 12px; overflow: hidden;">
+                <div
+                  style="width: <?php echo $status_id == 1 ? '100%' : ($status_id == 3 ? '50%' : '10%'); ?>; height: 100%; background: <?php echo $status_id == 1 ? '#22c55e' : ($status_id == 3 ? '#f59e0b' : '#ef4444'); ?>; transition: width 1s ease;">
+                </div>
+              </div>
+              <p style="margin: 0; font-size: 0.8rem; color: #64748b; font-weight: 500;">
+                <?php echo $status_id == 1 ? 'Validated & Ready' : ($status_id == 3 ? 'Verification in progress' : 'Validation required'); ?>
+              </p>
             </div>
           </div>
 
@@ -111,8 +130,7 @@ $current_status = $status_map[$status_id] ?? $status_map[2];
                 data-props='{"label":"Appointment", "value":"<?php echo date('h:i A', strtotime($booking['start_time'])); ?>", "trend": "flat"}'>
               </div>
             <?php else: ?>
-              <div data-component="stat-card"
-                data-props='{"label":"Active Booking", "value":"None", "trend": "flat"}'>
+              <div data-component="stat-card" data-props='{"label":"Active Booking", "value":"None", "trend": "flat"}'>
               </div>
             <?php endif; ?>
           </div>
