@@ -56,12 +56,48 @@ $history = $q_stmt->fetchAll(PDO::FETCH_ASSOC);
       <main class="admin-content">
         <div class="student-container">
           
-          <!-- ── Current Status Card ── -->
+          <!-- ── History Hero / Status Summary ── -->
+          <div class="student-hero" style="background: linear-gradient(135deg, var(--student-primary) 0%, #1d4ed8 100%); padding: 30px; border-radius: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; color: white; box-shadow: 0 15px 35px -5px rgba(59, 130, 246, 0.25);">
+             <div>
+                <h2 style="margin: 0; font-size: 1.6rem; font-weight: 800; letter-spacing: -0.5px;">My Validation History</h2>
+                <p style="margin: 5px 0 0; color: rgba(255,255,255,0.8); font-size: 0.95rem;">Review your previous queue entries and validation results.</p>
+             </div>
+             <div style="background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); padding: 15px 20px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.2); text-align: right;">
+                <span style="display: block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; opacity: 0.9;">Total Records</span>
+                <span style="font-size: 1.8rem; font-weight: 800;"><?php echo count($history); ?></span>
+             </div>
+          </div>
+
+          <!-- ── Quick Status Cards ── -->
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px;">
-              <div data-component="stat-card" data-props='{"label":"Current Status", "value":"<?php echo htmlspecialchars($student_data['status_name'] ?? 'Not Validated'); ?>", "trend": "<?php echo $student_data['status_id'] == 1 ? 'up' : 'flat'; ?>"}'></div>
-              <div data-component="stat-card" data-props='{"label":"Validation Date", "value":"<?php echo $student_data['validated_at'] ? date('M d, Y', strtotime($student_data['validated_at'])) : 'Pending'; ?>", "trend": "flat"}'></div>
+              <div class="student-card" style="padding: 20px; border: 1px solid #e2e8f0; border-radius: 16px; background: white; display: flex; align-items: center; gap: 15px;">
+                 <div style="width: 40px; height: 40px; border-radius: 10px; background: #eff6ff; display: flex; align-items: center; justify-content: center; color: var(--student-primary);">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                 </div>
+                 <div>
+                    <p style="margin: 0; font-size: 0.75rem; color: #64748b; font-weight: 600; text-transform: uppercase;">Current Status</p>
+                    <p style="margin: 2px 0 0; font-weight: 700; color: #1e293b;"><?php echo htmlspecialchars($student_data['status_name'] ?? 'Not Validated'); ?></p>
+                 </div>
+              </div>
+              <div class="student-card" style="padding: 20px; border: 1px solid #e2e8f0; border-radius: 16px; background: white; display: flex; align-items: center; gap: 15px;">
+                 <div style="width: 40px; height: 40px; border-radius: 10px; background: #fdf2f8; display: flex; align-items: center; justify-content: center; color: #db2777;">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                 </div>
+                 <div>
+                    <p style="margin: 0; font-size: 0.75rem; color: #64748b; font-weight: 600; text-transform: uppercase;">Validated On</p>
+                    <p style="margin: 2px 0 0; font-weight: 700; color: #1e293b;"><?php echo $student_data['validated_at'] ? date('M d, Y', strtotime($student_data['validated_at'])) : 'Pending'; ?></p>
+                 </div>
+              </div>
               <?php if($student_data['validated_by']): ?>
-                <div data-component="stat-card" data-props='{"label":"Validated By", "value":"<?php echo htmlspecialchars($student_data['validated_by']); ?>", "trend": "flat"}'></div>
+              <div class="student-card" style="padding: 20px; border: 1px solid #e2e8f0; border-radius: 16px; background: white; display: flex; align-items: center; gap: 15px;">
+                 <div style="width: 40px; height: 40px; border-radius: 10px; background: #f0fdf4; display: flex; align-items: center; justify-content: center; color: #16a34a;">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                 </div>
+                 <div>
+                    <p style="margin: 0; font-size: 0.75rem; color: #64748b; font-weight: 600; text-transform: uppercase;">Verified By</p>
+                    <p style="margin: 2px 0 0; font-weight: 700; color: #1e293b;"><?php echo htmlspecialchars($student_data['validated_by']); ?></p>
+                 </div>
+              </div>
               <?php endif; ?>
           </div>
 
