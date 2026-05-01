@@ -7,9 +7,10 @@
 }
 
 .student-container {
-  padding: 20px;
-  max-width: 1200px;
+  width: 100%;
+  max-width: 1100px;
   margin: 0 auto;
+  padding: 20px;
 }
 
 /* ── Hero Section ── */
@@ -76,8 +77,9 @@
 /* ── Info Grid ── */
 .student-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 25px;
+  width: 100%;
 }
 
 .student-card {
