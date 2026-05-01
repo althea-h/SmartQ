@@ -69,7 +69,9 @@ $current_status = $status_map[$status_id] ?? $status_map[2];
             <div style="position: absolute; top: -100px; right: -100px; width: 300px; height: 300px; background: rgba(59, 130, 246, 0.1); border-radius: 50%; blur: 80px; pointer-events: none;"></div>
             
             <div class="hero-welcome" style="position: relative; z-index: 2;">
-              <h1 style="font-weight: 800; letter-spacing: -1px; font-size: 2.2rem; margin-bottom: 8px;">Welcome back, <?php echo htmlspecialchars($user['first_name']); ?>!</h1>
+              <h1 style="font-weight: 800; letter-spacing: -1px; font-size: 2.2rem; margin-bottom: 12px;">Welcome back, 
+                <span style="background: var(--student-primary); padding: 4px 16px; border-radius: 12px; box-shadow: 0 8px 20px rgba(59, 130, 246, 0.25); display: inline-block; transform: rotate(-1deg);"><?php echo htmlspecialchars($user['first_name']); ?></span>!
+              </h1>
               <p style="color: #94a3b8; font-size: 1.1rem; max-width: 400px; line-height: 1.6;">Your digital gateway to campus services. Keep your ID validated for full access.</p>
             </div>
 
@@ -101,12 +103,16 @@ $current_status = $status_map[$status_id] ?? $status_map[2];
           <!-- ── Quick Stats ── -->
           <div class="student-stats-grid"
             style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px;">
-            <div data-component="stat-card"
-              data-props='{"label":"Current Status", "value":"<?php echo $current_status['label']; ?>", "trend": "<?php echo $status_id == 1 ? 'up' : 'flat'; ?>"}'>
-            </div>
             <?php if (isset($booking['queue_number'])): ?>
               <div data-component="stat-card"
                 data-props='{"label":"Queue Number", "value":"#<?php echo str_pad($booking['queue_number'], 3, '0', STR_PAD_LEFT); ?>", "trend": "flat"}'>
+              </div>
+              <div data-component="stat-card"
+                data-props='{"label":"Appointment", "value":"<?php echo date('h:i A', strtotime($booking['start_time'])); ?>", "trend": "flat"}'>
+              </div>
+            <?php else: ?>
+              <div data-component="stat-card"
+                data-props='{"label":"Active Booking", "value":"None", "trend": "flat"}'>
               </div>
             <?php endif; ?>
           </div>
