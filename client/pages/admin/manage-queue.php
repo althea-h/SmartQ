@@ -23,9 +23,6 @@ if (!isset($_SESSION['admin'])) {
   <link rel="stylesheet" href="../../assets/css/admin/queue.css">
 
   <title>SmartQ | Manage Queue</title>
-  <style>
-
-  </style>
 </head>
 
 <body>
@@ -102,7 +99,7 @@ if (!isset($_SESSION['admin'])) {
             $queuedStudents = $queueStmt->fetchAll(PDO::FETCH_ASSOC);
             ?>
 
-            <header class="manage-header" style="margin-top: var(--space-md);">
+            <header class="manage-header">
               <div class="queue-details">
                 <h2><?= $date->format('F d, Y') ?> Schedule</h2>
                 <div class="queue-meta">
@@ -110,17 +107,17 @@ if (!isset($_SESSION['admin'])) {
                   <span class="meta-item"> <?= $bookedCount ?> / <?= $schedule['slot_limit'] ?> Students</span>
                 </div>
               </div>
-              <div class="queue-actions" style="display: flex; gap: 10px;">
-                <div class="now-serving-box" style="background: #eff6ff; border: 1px solid #bfdbfe; padding: 5px 15px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-                    <span style="font-size: 0.7rem; color: #1e40af; font-weight: 700; text-transform: uppercase;">Now Serving</span>
-                    <strong id="current-number-display" style="font-size: 1.2rem; color: #1e40af;">#<?= str_pad($schedule['current_number'], 3, '0', STR_PAD_LEFT) ?></strong>
+              <div class="queue-actions">
+                <div class="now-serving-box">
+                  <span class="now-serving-label">Now Serving</span>
+                  <strong
+                    id="current-number-display">#<?= str_pad($schedule['current_number'], 3, '0', STR_PAD_LEFT) ?></strong>
                 </div>
-                <button id="btn-advance-queue" class="btn-primary" style="background: #10b981; border: none; padding: 0 20px; border-radius: 8px; font-weight: 600; cursor: pointer; color: white;">
-                    Call Next Student
+                <button id="btn-advance-queue" class="btn-primary-small">
+                  Call Next Student
                 </button>
-                <a href="../../../server/api/events/download_report.php?id=<?= $schedule_id ?>" class="btn-primary"
-                  style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center; background: #f1f5f9; color: #475569;">Download
-                  List</a>
+                <a href="../../../server/api/events/download_report.php?id=<?= $schedule_id ?>"
+                  class="btn-download-list">Download List</a>
               </div>
             </header>
 
@@ -149,19 +146,20 @@ if (!isset($_SESSION['admin'])) {
                         <td class="student-id-cell"><?= htmlspecialchars($row['student_id']) ?></td>
                         <td class="student-name-cell"><?= htmlspecialchars($row['first_name'] . ' ' . $row['last_name']) ?>
                         </td>
-                        <?php 
-                          $college_abbr = $row['college_name'] ?? 'N/A';
-                          $college_colors = [
-                            'COT' => ['bg' => '#fff7ed', 'text' => '#ff7d04'],
-                            'CON' => ['bg' => '#fdf2f8', 'text' => '#ec57ee'],
-                            'COB' => ['bg' => '#fffbeb', 'text' => '#fac800'],
-                            'COE' => ['bg' => '#eff6ff', 'text' => '#1c5adf'],
-                            'CPAG' => ['bg' => '#f0fdfa', 'text' => '#23c7c7'],
-                            'CAS' => ['bg' => '#f0fdf4', 'text' => '#10b981'],
-                          ];
-                          $colors = $college_colors[$college_abbr] ?? ['bg' => '#f1f5f9', 'text' => '#64748b'];
+                        <?php
+                        $college_abbr = $row['college_name'] ?? 'N/A';
+                        $college_colors = [
+                          'COT' => ['bg' => '#fff7ed', 'text' => '#ff7d04'],
+                          'CON' => ['bg' => '#fdf2f8', 'text' => '#ec57ee'],
+                          'COB' => ['bg' => '#fffbeb', 'text' => '#fac800'],
+                          'COE' => ['bg' => '#eff6ff', 'text' => '#1c5adf'],
+                          'CPAG' => ['bg' => '#f0fdfa', 'text' => '#23c7c7'],
+                          'CAS' => ['bg' => '#f0fdf4', 'text' => '#10b981'],
+                        ];
+                        $colors = $college_colors[$college_abbr] ?? ['bg' => '#f1f5f9', 'text' => '#64748b'];
                         ?>
-                        <td><span class="college-badge-small" style="background:<?= $colors['bg'] ?>; color:<?= $colors['text'] ?>; border-color:<?= $colors['text'] ?>20;"><?= htmlspecialchars($college_abbr) ?></span>
+                        <td><span class="college-badge-small"
+                            style="background:<?= $colors['bg'] ?>; color:<?= $colors['text'] ?>; border-color:<?= $colors['text'] ?>20;"><?= htmlspecialchars($college_abbr) ?></span>
                         </td>
                         <td><span
                             class="status-badge badge-<?= $status_class ?>"><?= htmlspecialchars($row['status_name'] ?? 'Pending') ?></span>
@@ -211,26 +209,19 @@ if (!isset($_SESSION['admin'])) {
       </main>
 
       <!-- ── Confirmation Modal ── -->
-      <div id="status-modal"
-        style="display:none; position:fixed; inset:0; z-index:9999; align-items:center; justify-content:center;">
+      <div id="status-modal" class="modal-overlay">
         <!-- Backdrop -->
-        <div id="modal-backdrop"
-          style="position:absolute; inset:0; background:rgba(0,0,0,0.45); backdrop-filter:blur(3px);"></div>
+        <div id="modal-backdrop" class="modal-backdrop"></div>
         <!-- Card -->
-        <div
-          style="position:relative; background:var(--surface,#fff); border-radius:14px; padding:36px 32px; max-width:420px; width:90%; box-shadow:0 20px 60px rgba(0,0,0,0.25); text-align:center;">
-          <div id="modal-icon"
-            style="width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;">
+        <div class="modal-card">
+          <div id="modal-icon" class="modal-icon">
             <!-- icon injected by JS -->
           </div>
-          <h3 id="modal-title" style="margin:0 0 10px; font-size:1.2rem; color:var(--text-primary,#111);"></h3>
-          <p id="modal-desc" style="margin:0 0 28px; font-size:0.9rem; color:var(--text-muted,#666); line-height:1.55;">
-          </p>
-          <div style="display:flex; gap:12px; justify-content:center;">
-            <button id="modal-cancel-btn"
-              style="flex:1; padding:10px 0; border-radius:8px; border:1px solid var(--border,#ddd); background:transparent; color:var(--text-primary,#333); font-size:0.9rem; cursor:pointer;">Cancel</button>
-            <button id="modal-confirm-btn"
-              style="flex:1; padding:10px 0; border-radius:8px; border:none; color:#fff; font-size:0.9rem; font-weight:600; cursor:pointer;">Confirm</button>
+          <h3 id="modal-title" class="modal-title"></h3>
+          <p id="modal-desc" class="modal-desc"></p>
+          <div class="modal-actions">
+            <button id="modal-cancel-btn" class="modal-btn-cancel">Cancel</button>
+            <button id="modal-confirm-btn" class="modal-btn-confirm">Confirm</button>
           </div>
         </div>
       </div>
@@ -323,7 +314,7 @@ if (!isset($_SESSION['admin'])) {
             if (res.success) {
               const padded = String(res.current_number).padStart(3, '0');
               $('#current-number-display').text('#' + padded);
-              
+
               // Highlight the row in the table if it exists
               $('.students-table tr').css('background', ''); // Reset
               $(`.students-table tr:has(strong:contains("#${padded}"))`).css('background', '#f0f9ff');

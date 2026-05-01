@@ -76,63 +76,6 @@ $statuses = $statuses_stmt->fetchAll(PDO::FETCH_ASSOC);
       <main class="admin-content">
         <div class="reports-container">
 
-          <!-- ── Stats Grid ── -->
-          <div class="stats-grid">
-            <div class="stat-card">
-              <div class="stat-header">
-                <div class="stat-icon" style="background: rgba(37, 99, 235, 0.1); color: #2563eb;">
-                  <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="9" cy="7" r="4"></circle>
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                  </svg>
-                </div>
-              </div>
-              <div class="stat-value"><?php echo number_format($stats['total']); ?></div>
-              <div class="stat-label">Total Students</div>
-            </div>
-
-            <div class="stat-card">
-              <div class="stat-header">
-                <div class="stat-icon" style="background: rgba(34, 197, 94, 0.1); color: #16a34a;">
-                  <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                  </svg>
-                </div>
-              </div>
-              <div class="stat-value"><?php echo number_format($stats['validated']); ?></div>
-              <div class="stat-label">Validated</div>
-            </div>
-
-            <div class="stat-card">
-              <div class="stat-header">
-                <div class="stat-icon" style="background: rgba(234, 179, 8, 0.1); color: #ca8a04;">
-                  <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="12" y1="8" x2="12" y2="12"></line>
-                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                  </svg>
-                </div>
-              </div>
-              <div class="stat-value"><?php echo number_format($stats['pending']); ?></div>
-              <div class="stat-label">Pending Review</div>
-            </div>
-
-            <div class="stat-card">
-              <div class="stat-header">
-                <div class="stat-icon" style="background: rgba(239, 68, 68, 0.1); color: #dc2626;">
-                  <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                  </svg>
-                </div>
-              </div>
-              <div class="stat-value"><?php echo number_format($stats['not_validated']); ?></div>
-              <div class="stat-label">Not Validated</div>
-            </div>
-          </div>
-
           <!-- ── Filters ── -->
           <div class="reports-controls">
             <div class="controls-header">
@@ -316,6 +259,21 @@ $statuses = $statuses_stmt->fetchAll(PDO::FETCH_ASSOC);
               const collegeCtx = document.getElementById('collegeChart').getContext('2d');
               if (collegeChart) collegeChart.destroy();
 
+              // Color mapping for colleges
+              const collegeColors_bar = {
+                'COT': '#ff7d04',
+                'CON': '#ec57ee',
+                'COB': '#fac800',
+                'COE': '#1c5adf',
+                'CPAG': '#23c7c7',
+                'CAS': '#10b981',
+              };
+
+              const barColors = res.charts.college.labels.map(label => {
+                const normalized = label.trim().toUpperCase();
+                return collegeColors_bar[normalized] || '#2563eb';
+              });
+
               collegeChart = new Chart(collegeCtx, {
                 type: 'bar',
                 data: {
@@ -323,7 +281,7 @@ $statuses = $statuses_stmt->fetchAll(PDO::FETCH_ASSOC);
                   datasets: [{
                     label: 'Validated Students',
                     data: res.charts.college.data,
-                    backgroundColor: '#2563eb',
+                    backgroundColor: barColors,
                     borderRadius: 6
                   }]
                 },

@@ -44,38 +44,6 @@ $not_validated = $db->query("SELECT COUNT(*) FROM students WHERE status_id = 2")
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <style>
-    /* Dashboard Specific Chart Styles */
-    .chart-card {
-      background: white;
-      border-radius: 24px;
-      padding: 24px;
-      border: 1px solid rgba(0, 0, 0, 0.04);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    .chart-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .chart-title-text {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--text-main);
-      font-family: 'Outfit', sans-serif;
-    }
-
-    .chart-container {
-      position: relative;
-      height: 300px;
-      width: 100%;
-    }
-  </style>
 </head>
 
 <body>
@@ -173,10 +141,6 @@ $not_validated = $db->query("SELECT COUNT(*) FROM students WHERE status_id = 2")
           </div>
         </div>
 
-        <!-- ROW 3: Recent Activity (full width) -->
-        <section class="dash-row dash-activity" id="dash-activity">
-          <div data-component="recent-activity"></div>
-        </section>
 
       </main>
 
@@ -207,6 +171,22 @@ $not_validated = $db->query("SELECT COUNT(*) FROM students WHERE status_id = 2")
             if (res.success) {
               // ── College Distribution (Bar) ──
               const collegeCtx = document.getElementById('collegeChart').getContext('2d');
+              
+              // Color mapping for colleges
+              const collegeColors = {
+                'COT': '#ff7d04',
+                'CON': '#ec57ee',
+                'COB': '#fac800',
+                'COE': '#1c5adf',
+                'CPAG': '#23c7c7',
+                'CAS': '#10b981',
+              };
+
+              const barColors = res.charts.college.labels.map(label => {
+                const normalized = label.trim().toUpperCase();
+                return collegeColors[normalized] || '#2563eb';
+              });
+
               collegeChart = new Chart(collegeCtx, {
                 type: 'bar',
                 data: {
@@ -214,7 +194,7 @@ $not_validated = $db->query("SELECT COUNT(*) FROM students WHERE status_id = 2")
                   datasets: [{
                     label: 'Validated Students',
                     data: res.charts.college.data,
-                    backgroundColor: '#2563eb',
+                    backgroundColor: barColors,
                     borderRadius: 6
                   }]
                 },
