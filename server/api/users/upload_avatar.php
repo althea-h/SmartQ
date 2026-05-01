@@ -14,12 +14,26 @@ if (!isset($_FILES['avatar'])) {
     exit;
 }
 
-$file = $_FILES['avatar'];
 $upload_dir = '../../../client/assets/img/profiles/';
 $db_path_prefix = '../../assets/img/profiles/';
 
+if (!isset($_SESSION['student']) && !isset($_SESSION['admin'])) {
+    echo json_encode(['success' => false, 'message' => 'Session expired or not found. Please relogin.']);
+    exit;
+}
+
+$file = $_FILES['avatar'];
+
 if (!file_exists($upload_dir)) {
-    mkdir($upload_dir, 0777, true);
+    if (!mkdir($upload_dir, 0777, true)) {
+        echo json_encode(['success' => false, 'message' => 'Failed to create upload directory.']);
+        exit;
+    }
+}
+
+if (!is_writable($upload_dir)) {
+    echo json_encode(['success' => false, 'message' => 'Upload directory is not writable.']);
+    exit;
 }
 
 // Validate file type

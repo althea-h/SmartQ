@@ -1,4 +1,5 @@
 <?php
+session_start();
 /**
  * Topbar Component
  * 
@@ -94,8 +95,8 @@ if ($admin_data) {
           <div class="avatar-overlay">
             <i class="fas fa-camera"></i>
           </div>
-          <input type="file" id="avatar-upload" style="display: none;" accept="image/*">
         </div>
+        <input type="file" id="avatar-upload" style="display: none;" accept="image/*">
         <div class="topbar-user-info">
           <span class="topbar-username"><?= htmlspecialchars($full_name) ?></span>
           <span class="topbar-user-role"><?= htmlspecialchars($user_role) ?></span>
@@ -159,23 +160,20 @@ if ($admin_data) {
       }
     });
 
-    // Avatar Upload Logic
-    const $avatarContainer = $('#avatar-container');
-    const $avatarInput = $('#avatar-upload');
-
-    $avatarContainer.on('click', function () {
-      $avatarInput.click();
+    // Avatar Upload Logic (Use Event Delegation)
+    $(document).on('click', '#avatar-container', function () {
+      $('#avatar-upload').click();
     });
 
-    $avatarInput.on('change', function () {
+    $(document).on('change', '#avatar-upload', function () {
       const file = this.files[0];
       if (!file) return;
 
       const formData = new FormData();
       formData.append('avatar', file);
 
-      // Show loading state
-      $avatarContainer.addClass('uploading');
+      const $container = $('#avatar-container');
+      $container.addClass('uploading');
 
       $.ajax({
         url: '../../../server/api/users/upload_avatar.php',
@@ -185,23 +183,23 @@ if ($admin_data) {
         contentType: false,
         dataType: 'json',
         success: function (response) {
-          $avatarContainer.removeClass('uploading');
+          $container.removeClass('uploading');
           if (response.success) {
-            if ($('#current-avatar').length) {
-              $('#current-avatar').attr('src', response.avatar_url);
-            } else {
-              $avatarContainer.html(`<img src="${response.avatar_url}" alt="Avatar" class="avatar-img" id="current-avatar">
-                <div class="avatar-overlay"><i class="fas fa-camera"></i></div>
-                <input type="file" id="avatar-upload" style="display: none;" accept="image/*">`);
-            }
+            // Re-render the avatar part
+            $container.html(`
+              <img src="${response.avatar_url}" alt="Avatar" class="avatar-img" id="current-avatar">
+              <div class="avatar-overlay">
+                <i class="fas fa-camera"></i>
+              </div>
+            `);
             alert('Profile picture updated successfully!');
           } else {
             alert('Error: ' + response.message);
           }
         },
         error: function () {
-          $avatarContainer.removeClass('uploading');
-          alert('Failed to upload image. Please try again.');
+          $container.removeClass('uploading');
+          alert('Failed to upload image. Please check your connection or file size.');
         }
       });
     });
