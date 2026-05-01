@@ -79,7 +79,7 @@ function sidebar_icon($filename)
         <li>
           <a href="book-queue.php" class="sidebar-link <?= $active === 'book' ? 'active' : '' ?>">
             <?= sidebar_icon('queue.svg') ?>
-            <span class="sidebar-label">Validate ID</span>
+            <span class="sidebar-label">Queue</span>
           </a>
         </li>
         <li>

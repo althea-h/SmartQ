@@ -7,9 +7,11 @@
 }
 
 .student-container {
-  padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
+  width: 100%;
+  padding: 30px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
 }
 
 /* ── Hero Section ── */
@@ -58,15 +60,27 @@
   backdrop-filter: blur(5px);
 }
 
-.status-pill.validated { background: #22c55e; color: white; }
-.status-pill.pending { background: #f59e0b; color: white; }
-.status-pill.not-validated { background: #ef4444; color: white; }
+.status-pill.validated {
+  background: #22c55e;
+  color: white;
+}
+
+.status-pill.pending {
+  background: #f59e0b;
+  color: white;
+}
+
+.status-pill.not-validated {
+  background: #ef4444;
+  color: white;
+}
 
 /* ── Info Grid ── */
 .student-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 25px;
+  width: 100%;
 }
 
 .student-card {
@@ -126,6 +140,135 @@
   background: #2563eb;
 }
 
+/* ── Booking Specific Styles ── */
+.booking-alert {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 25px;
+  border-radius: 20px;
+  margin-bottom: 10px;
+  border: 1px solid transparent;
+  animation: slideDown 0.4s ease-out;
+}
+
+.booking-alert.success {
+  background: #f0fdf4;
+  color: #16a34a;
+  border-color: #bdf4d4;
+}
+
+.booking-alert.warning {
+  background: #fffbeb;
+  color: #b45309;
+  border-color: #fde68a;
+}
+
+.alert-icon {
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
+.alert-content h3 {
+  margin: 0 0 5px 0;
+  font-weight: 800;
+  font-size: 1.2rem;
+}
+
+.alert-content p {
+  margin: 0;
+  opacity: 0.8;
+  font-weight: 500;
+}
+
+.schedule-card.premium {
+  border: 1px solid #e2e8f0;
+  border-radius: 24px;
+  padding: 0 !important;
+  overflow: hidden;
+  background: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-body {
+  padding: 24px;
+  flex: 1;
+}
+
+.card-footer {
+  padding: 20px 24px;
+  background: #f8fafc;
+  border-top: 1px solid #f1f5f9;
+}
+
+.date-badge {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  width: 65px;
+  height: 65px;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.date-badge .day {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #1e293b;
+  line-height: 1;
+}
+
+.date-badge .month {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.progress-label {
+  font-size: 0.75rem;
+  color: #64748b;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.progress-value {
+  font-size: 0.9rem;
+  color: #1e293b;
+  font-weight: 800;
+}
+
+.progress-bar-container {
+  height: 10px;
+  background: #f1f5f9;
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 /* ── Queue Highlight ── */
 .queue-highlight {
   background: #f0f9ff;
@@ -183,7 +326,8 @@
 
   .admin-main {
     margin-left: 0 !important;
-    padding-bottom: 80px; /* Space for mobile nav */
+    padding-bottom: 80px;
+    /* Space for mobile nav */
   }
 
   .admin-content {
@@ -195,7 +339,8 @@
   }
 
   .topbar-search {
-    display: none !important; /* Hide search on student mobile */
+    display: none !important;
+    /* Hide search on student mobile */
   }
 
   .topbar-actions {
@@ -270,13 +415,85 @@
   .topbar-title {
     font-size: 1.1rem !important;
   }
-  
+
   .topbar-subtitle {
     display: none;
   }
 }
 
-/* Hide mobile nav on desktop by default */
+/* ── Queue Notifications ── */
+.queue-notif {
+  transition: all 0.3s ease;
+}
+
+.queue-notif.notif-now {
+  background: #f0fdf4 !important;
+  border-left-color: #22c55e !important;
+  animation: pulse-green 2s infinite;
+}
+
+.queue-notif.notif-now span {
+  color: #15803d !important;
+}
+
+.queue-notif.notif-next {
+  background: #fffbeb !important;
+  border-left-color: #f59e0b !important;
+}
+
+.queue-notif.notif-next span {
+  color: #b45309 !important;
+}
+
+.notif-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #94a3b8;
+}
+
+.notif-now .notif-dot {
+  background: #22c55e;
+  box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+  animation: dot-pulse 1.5s infinite;
+}
+
+.notif-next .notif-dot {
+  background: #f59e0b;
+}
+
+@keyframes pulse-green {
+  0% {
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.1);
+  }
+
+  70% {
+    box-shadow: 0 0 0 10px rgba(34, 197, 94, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+  }
+}
+
+@keyframes dot-pulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+  }
+
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 6px rgba(34, 197, 94, 0);
+  }
+
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+  }
+}
+
+/* ── Mobile Nav Hide on Desktop ── */
 .mobile-nav {
   display: none;
 }

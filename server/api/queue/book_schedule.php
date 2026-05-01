@@ -27,7 +27,7 @@ try {
     $db = $database->getConnection();
 
     // 1. Check if schedule exists and is active
-    $query = "SELECT * FROM queue_schedule WHERE schedule_id = :id AND status = 'active' LIMIT 1";
+    $query = "SELECT * FROM queue_schedule WHERE schedule_id = :id AND status = 'active' AND deleted_at IS NULL LIMIT 1";
     $stmt = $db->prepare($query);
     $stmt->bindParam(':id', $schedule_id);
     $stmt->execute();
@@ -49,7 +49,7 @@ try {
     }
 
     // NEW: Check if student is already validated
-    $checkStatusQuery = "SELECT status_id FROM students WHERE student_id = :sid LIMIT 1";
+    $checkStatusQuery = "SELECT status_id FROM students WHERE student_id = :sid AND deleted_at IS NULL LIMIT 1";
     $csStmt = $db->prepare($checkStatusQuery);
     $csStmt->bindParam(':sid', $student_id);
     $csStmt->execute();
@@ -61,7 +61,7 @@ try {
     }
 
     // 2. Check if student already booked for this schedule
-    $query = "SELECT * FROM queue_list WHERE student_id = :sid AND schedule_id = :schid LIMIT 1";
+    $query = "SELECT * FROM queue_list WHERE student_id = :sid AND schedule_id = :schid AND deleted_at IS NULL LIMIT 1";
     $stmt = $db->prepare($query);
     $stmt->bindParam(':sid', $student_id);
     $stmt->bindParam(':schid', $schedule_id);
@@ -72,7 +72,7 @@ try {
     }
 
     // 3. Check availability
-    $query = "SELECT COUNT(*) FROM queue_list WHERE schedule_id = :id";
+    $query = "SELECT COUNT(*) FROM queue_list WHERE schedule_id = :id AND deleted_at IS NULL";
     $stmt = $db->prepare($query);
     $stmt->bindParam(':id', $schedule_id);
     $stmt->execute();
@@ -96,10 +96,18 @@ try {
 
     if ($stmt->execute()) {
         // 6. Update student status to 'Pending Review' (status_id = 3)
-        $updateStatusQuery = "UPDATE students SET status_id = 3 WHERE student_id = :sid";
+        // Check previous status for stats
+        if ($studentStatus == 2) { // 2 = Not Validated
+            $db->exec("UPDATE system_stats SET stat_value = GREATEST(0, stat_value - 1) WHERE stat_key = 'not_validated'");
+        }
+
+        $updateStatusQuery = "UPDATE students SET status_id = 3 WHERE student_id = :sid AND deleted_at IS NULL";
         $updateStatusStmt = $db->prepare($updateStatusQuery);
         $updateStatusStmt->bindParam(':sid', $student_id);
         $updateStatusStmt->execute();
+
+        // Increment queueing count
+        $db->exec("UPDATE system_stats SET stat_value = stat_value + 1 WHERE stat_key = 'queueing'");
 
         // Also update session to reflect status immediately
         if (isset($_SESSION['student']['student_id']) && $_SESSION['student']['student_id'] == $student_id) {

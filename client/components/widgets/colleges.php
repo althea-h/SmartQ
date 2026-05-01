@@ -12,7 +12,7 @@ $db = $database->getConnection();
 // Fetch Real College Data
 $query = "SELECT c.college_name as name, COUNT(s.student_id) as students
           FROM colleges c
-          LEFT JOIN students s ON c.college_id = s.college_id
+          LEFT JOIN students s ON c.college_id = s.college_id AND s.deleted_at IS NULL
           GROUP BY c.college_id
           ORDER BY students DESC";
 

@@ -59,6 +59,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $stmt->bindParam(':college_id', $college_id);
 
     if ($stmt->execute()) {
+        // Increment Stats
+        $db->exec("UPDATE system_stats SET stat_value = stat_value + 1 WHERE stat_key IN ('total_students', 'not_validated')");
+
         $_SESSION['success'] = "Account created successfully! You can now login.";
         header('Location: ../../../client/pages/login.php');
         exit();
