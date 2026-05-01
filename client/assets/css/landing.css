@@ -533,18 +533,31 @@ section {
 
 .team-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 30px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
   margin-top: 50px;
+}
+
+@media (max-width: 1200px) {
+  .team-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .team-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .team-card {
   background: white;
-  padding: 30px;
+  padding: 20px;
   border-radius: 24px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
   transition: all 0.3s ease;
   border: 1px solid var(--border);
+  text-align: left;
 }
 
 .team-card:hover {
@@ -553,41 +566,51 @@ section {
   border-color: var(--primary-light);
 }
 
-.team-img-placeholder {
-  width: 120px;
-  height: 120px;
-  background: #f1f5f9;
-  border-radius: 50%;
-  margin: 0 auto 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #94a3b8;
-  position: relative;
+.team-img-large {
+  width: 100%;
+  aspect-ratio: 1/1;
+  border-radius: 20px;
   overflow: hidden;
+  margin-bottom: 20px;
+  background: #f1f5f9;
 }
 
-.team-img-placeholder i {
-  font-size: 2.5rem;
+.team-img-large img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.team-info {
+  padding: 0 10px;
 }
 
 .team-card h4 {
+  color: var(--text-main);
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 1.25rem;
   margin-bottom: 4px;
-  font-size: 1.2rem;
 }
 
-.team-card span {
+.team-card .role {
   color: var(--primary-color);
-  font-weight: 600;
   font-size: 0.9rem;
+  font-weight: 600;
   display: block;
   margin-bottom: 12px;
 }
 
+.team-card .description {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 15px;
+}
+
 .team-socials {
   display: flex;
-  justify-content: center;
-  gap: 12px;
+  gap: 8px;
 }
 
 .social-dot {
@@ -783,11 +806,6 @@ footer p {
 
   .section-header h2 {
     font-size: 2rem;
-  }
-
-  .team-grid {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
   }
 }
 

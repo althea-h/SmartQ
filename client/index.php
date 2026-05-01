@@ -151,56 +151,78 @@
         <div class="team-grid">
           <!-- Team Member 1 -->
           <div class="team-card">
-            <div class="team-img-placeholder">
-              <i class="fas fa-user"></i>
+            <div class="team-img-large">
+              <img src="assets/img/Jerusalem, Wenox.png" alt="Owen Jerusalem">
             </div>
-            <h4>Team Member 1</h4>
-            <span>Lead Developer</span>
-            <div class="team-socials">
-              <div class="social-dot"></div>
-              <div class="social-dot"></div>
-              <div class="social-dot"></div>
+            <div class="team-info">
+              <h4>Owen Jerusalem</h4>
+              <span class="role">Project Lead / Developer</span>
+              <p class="description">Contributes creative assets and handles core system development with consistent
+                attention to detail.</p>
+              <div class="team-socials">
+                <div class="social-dot"></div>
+                <div class="social-dot"></div>
+                <div class="social-dot"></div>
+              </div>
             </div>
           </div>
-          <!-- Team Member 2 -->
+
+          <!-- Team Member 1 -->
           <div class="team-card">
-            <div class="team-img-placeholder">
-              <i class="fas fa-user"></i>
+            <div class="team-img-large">
+              <img src="assets/img/Jerusalem, Wenox.png" alt="Owen Jerusalem">
             </div>
-            <h4>Team Member 2</h4>
-            <span>UI/UX Designer</span>
-            <div class="team-socials">
-              <div class="social-dot"></div>
-              <div class="social-dot"></div>
-              <div class="social-dot"></div>
+            <div class="team-info">
+              <h4>Owen Jerusalem</h4>
+              <span class="role">Project Lead / Developer</span>
+              <p class="description">Contributes creative assets and handles core system development with consistent
+                attention to detail.</p>
+              <div class="team-socials">
+                <div class="social-dot"></div>
+                <div class="social-dot"></div>
+                <div class="social-dot"></div>
+              </div>
             </div>
           </div>
-          <!-- Team Member 3 -->
+
+          <!-- Team Member 1 -->
           <div class="team-card">
-            <div class="team-img-placeholder">
-              <i class="fas fa-user"></i>
+            <div class="team-img-large">
+              <img src="assets/img/Jerusalem, Wenox.png" alt="Owen Jerusalem">
             </div>
-            <h4>Team Member 3</h4>
-            <span>System Analyst</span>
-            <div class="team-socials">
-              <div class="social-dot"></div>
-              <div class="social-dot"></div>
-              <div class="social-dot"></div>
+            <div class="team-info">
+              <h4>Owen Jerusalem</h4>
+              <span class="role">Project Lead / Developer</span>
+              <p class="description">Contributes creative assets and handles core system development with consistent
+                attention to detail.</p>
+              <div class="team-socials">
+                <div class="social-dot"></div>
+                <div class="social-dot"></div>
+                <div class="social-dot"></div>
+              </div>
             </div>
           </div>
-          <!-- Team Member 4 -->
+
+          <!-- Team Member 1 -->
           <div class="team-card">
-            <div class="team-img-placeholder">
-              <i class="fas fa-user"></i>
+            <div class="team-img-large">
+              <img src="assets/img/Jerusalem, Wenox.png" alt="Owen Jerusalem">
             </div>
-            <h4>Team Member 4</h4>
-            <span>Quality Assurance</span>
-            <div class="team-socials">
-              <div class="social-dot"></div>
-              <div class="social-dot"></div>
-              <div class="social-dot"></div>
+            <div class="team-info">
+              <h4>Owen Jerusalem</h4>
+              <span class="role">Project Lead / Developer</span>
+              <p class="description">Contributes creative assets and handles core system development with consistent
+                attention to detail.</p>
+              <div class="team-socials">
+                <div class="social-dot"></div>
+                <div class="social-dot"></div>
+                <div class="social-dot"></div>
+              </div>
             </div>
           </div>
+
+
+
         </div>
       </div>
     </div>
