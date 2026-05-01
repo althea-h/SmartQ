@@ -29,7 +29,7 @@ $user = $_SESSION['student'];
       <main class="admin-content">
         <div class="student-container">
           <!-- ── Booking Hero ── -->
-          <div class="student-hero" style="background: linear-gradient(135deg, var(--student-primary) 0%, #1d4ed8 100%); padding: 30px; border-radius: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; color: white; box-shadow: 0 15px 35px -5px rgba(59, 130, 246, 0.25);">
+          <div class="student-hero" style="background: linear-gradient(135deg, var(--student-primary) 0%, #1d4ed8 100%); padding: 30px; border-radius: 20px; margin-bottom: 0; display: flex; justify-content: space-between; align-items: center; color: white; box-shadow: 0 15px 35px -5px rgba(59, 130, 246, 0.25);">
              <div>
                 <h2 style="margin: 0; font-size: 1.6rem; font-weight: 800; letter-spacing: -0.5px;">Book Validation Slot</h2>
                 <p style="margin: 5px 0 0; color: rgba(255,255,255,0.8); font-size: 0.95rem;">Choose a convenient date and time to validate your ID.</p>
@@ -40,48 +40,50 @@ $user = $_SESSION['student'];
              </div>
           </div>
 
+          <?php
+          require_once "../../../server/config/database.php";
+          $database = new Database();
+          $db = $database->getConnection();
+
+          date_default_timezone_set('Asia/Manila');
+          $now = new DateTime();
+
+          try {
+            // Check if student is already validated
+            $status_query = "SELECT status_id FROM students WHERE student_id = :sid LIMIT 1";
+            $status_stmt = $db->prepare($status_query);
+            $status_stmt->bindParam(':sid', $user['student_id']);
+            $status_stmt->execute();
+            $is_validated = ($status_stmt->fetchColumn() == 1);
+
+            if ($is_validated) {
+              echo '<div style="background: #f0fdf4; color: #16a34a; padding: 25px; border-radius: 20px; text-align: center; border: 1px solid #bdf4d4; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+                          <div style="font-size: 2.5rem; margin-bottom: 10px;">✅</div>
+                          <h3 style="margin-bottom: 5px; font-weight: 800;">You are already Validated!</h3>
+                          <p style="opacity: 0.8; font-weight: 500;">Your ID is active. No further validation is required at this time.</p>
+                        </div>';
+            } else {
+              // Check if student has ANY active booking
+              $active_booking_query = "SELECT 1 FROM queue_list ql 
+                                       JOIN queue_schedule qs ON ql.schedule_id = qs.schedule_id 
+                                       WHERE ql.student_id = :sid AND qs.status = 'active' AND qs.schedule_date >= CURDATE() 
+                                       LIMIT 1";
+              $ab_stmt = $db->prepare($active_booking_query);
+              $ab_stmt->bindParam(':sid', $user['student_id']);
+              $ab_stmt->execute();
+              if ($ab_stmt->fetch()) {
+                echo '<div style="background: #fffbeb; color: #b45309; padding: 25px; border-radius: 20px; text-align: center; border: 1px solid #fde68a; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+                            <div style="font-size: 2.5rem; margin-bottom: 10px;">🕒</div>
+                            <h3 style="margin-bottom: 5px; font-weight: 800;">Active Booking Found</h3>
+                            <p style="opacity: 0.8; font-weight: 500;">You have an upcoming validation. Check your dashboard for details.</p>
+                          </div>';
+              }
+            }
+          ?>
+
           <!-- ── Schedule Grid ── -->
           <div class="student-grid" id="booking-grid">
             <?php
-            require_once "../../../server/config/database.php";
-            $database = new Database();
-            $db = $database->getConnection();
-
-            date_default_timezone_set('Asia/Manila');
-            $now = new DateTime();
-
-            try {
-              // Check if student is already validated
-              $status_query = "SELECT status_id FROM students WHERE student_id = :sid LIMIT 1";
-              $status_stmt = $db->prepare($status_query);
-              $status_stmt->bindParam(':sid', $user['student_id']);
-              $status_stmt->execute();
-              $is_validated = ($status_stmt->fetchColumn() == 1);
-
-              if ($is_validated) {
-                echo '<div style="grid-column: 1/-1; background: #f0fdf4; color: #16a34a; padding: 25px; border-radius: 20px; margin-bottom: 20px; text-align: center; border: 1px solid #bdf4d4; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
-                            <div style="font-size: 2.5rem; margin-bottom: 10px;">✅</div>
-                            <h3 style="margin-bottom: 5px; font-weight: 800;">You are already Validated!</h3>
-                            <p style="opacity: 0.8; font-weight: 500;">Your ID is active. No further validation is required at this time.</p>
-                          </div>';
-              } else {
-                // Check if student has ANY active booking
-                $active_booking_query = "SELECT 1 FROM queue_list ql 
-                                         JOIN queue_schedule qs ON ql.schedule_id = qs.schedule_id 
-                                         WHERE ql.student_id = :sid AND qs.status = 'active' AND qs.schedule_date >= CURDATE() 
-                                         LIMIT 1";
-                $ab_stmt = $db->prepare($active_booking_query);
-                $ab_stmt->bindParam(':sid', $user['student_id']);
-                $ab_stmt->execute();
-                if ($ab_stmt->fetch()) {
-                  echo '<div style="grid-column: 1/-1; background: #fffbeb; color: #b45309; padding: 25px; border-radius: 20px; margin-bottom: 20px; text-align: center; border: 1px solid #fde68a; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
-                              <div style="font-size: 2.5rem; margin-bottom: 10px;">🕒</div>
-                              <h3 style="margin-bottom: 5px; font-weight: 800;">Active Booking Found</h3>
-                              <p style="opacity: 0.8; font-weight: 500;">You have an upcoming validation. Check your dashboard for details.</p>
-                            </div>';
-                }
-              }
-
               // Fetch only active schedules
               $query = "SELECT qs.*, 
                           (SELECT COUNT(*) FROM queue_list ql WHERE ql.schedule_id = qs.schedule_id) as booked_count
