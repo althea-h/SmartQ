@@ -93,7 +93,7 @@ function sidebar_icon($filename)
 
   <!-- Sidebar footer -->
   <div class="sidebar-footer">
-    <a href="../../server/api/auth/logout.php?role=<?= $role ?>" class="sidebar-link">
+    <a href="../../../server/api/auth/logout.php?role=<?= $role ?>" class="sidebar-link">
       <?= sidebar_icon('logout.svg') ?>
       <span class="sidebar-label">Logout</span>
     </a>
