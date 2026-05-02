@@ -534,6 +534,10 @@
   .mobile-nav-item.active {
     color: var(--student-primary);
   }
+
+  .logout-nav-item:hover, .logout-nav-item:active {
+    color: #ef4444 !important;
+  }
 }
 
 /* Extra small screens */
